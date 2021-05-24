@@ -5,7 +5,8 @@ media
 .DS_Store
 *.sqlite3
 *.env
-
+.venv
+*.venv
 # Accept these files in the repository
 !.gitignore
 !.travis.yml
