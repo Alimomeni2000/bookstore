@@ -84,7 +84,12 @@ class OrderSummaryView(LoginRequiredMixin, View):
 
 
 class ItemDetailView(DetailView):
+<<<<<<< HEAD
+    def get_object(self):
+        return get_object_or_404(Item.objects.all(), pk=self.kwargs.get('pk'))
+=======
     model = Item
+>>>>>>> 033ceea607ac63bc133e7d16a8aed6e5cbe67b43
     template_name = "product.html"
 
 
