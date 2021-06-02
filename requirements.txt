@@ -1,23 +1,15 @@
-<<<<<<< HEAD
-django-filter
-markdown
-pillow
-Django==3.2
-=======
 Django==3.2
 django-allauth
 markdown
 django-filter
 pillow
 djangorestframework
->>>>>>> 033ceea607ac63bc133e7d16a8aed6e5cbe67b43
 django-cart
 django-crispy-forms
 stripe
 django-utils-six
 django_countries
-<<<<<<< HEAD
 django-allauth
 django-rest-auth
-=======
->>>>>>> 033ceea607ac63bc133e7d16a8aed6e5cbe67b43
+dj-rest-auth
+

@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from core.views import ItemDetailView
 from django.shortcuts import render
 from .serializers import ItemSerializer, UserSerializer
@@ -38,8 +38,5 @@ class UserDetail(RetrieveAPIView):
         return User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsSuperUserOrStaffReadOnly,)
-=======
-from django.shortcuts import render
-from .serializers import ItemSerializer
-# Create your views here.
->>>>>>> 033ceea607ac63bc133e7d16a8aed6e5cbe67b43
+
+
