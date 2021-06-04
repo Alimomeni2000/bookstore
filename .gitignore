@@ -6,6 +6,7 @@ media
 *.sqlite3
 *.env
 .venv
+venv
 *.venv
 # Accept these files in the repository
 !.gitignore

@@ -1,10 +1,10 @@
 
-from core.views import ItemDetailView
+from core.views import BookDetailView
 from django.shortcuts import render
-from .serializers import ItemSerializer, UserSerializer
+from .serializers import BookSerializer, UserSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from django.contrib.auth.models import Permission, User
-from core.models import Item
+from core.models import Book
 from .permissions import (
     IsAuthorOrReadOnly,
     IsStaffOrReadOnly,
@@ -14,14 +14,14 @@ from .permissions import (
 # Create your views here.
 
 
-class ItemList(ListAPIView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+class BookList(ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
 
 
-class ItemDetail(RetrieveAPIView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+class BookDetail(RetrieveAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
     permission_classes = (IsStaffOrReadOnly, IsAuthorOrReadOnly)
 
 
@@ -38,5 +38,3 @@ class UserDetail(RetrieveAPIView):
         return User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsSuperUserOrStaffReadOnly,)
-
-

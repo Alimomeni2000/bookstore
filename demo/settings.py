@@ -1,4 +1,5 @@
 import os
+from decouple import config
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
@@ -6,7 +7,10 @@ DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
 ALLOWED_HOSTS = []
-
+# TRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
+# STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
+STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
 LOGIN_REDIRECT_URL = "core:home"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
@@ -77,8 +81,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'fa-ir'
+TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True

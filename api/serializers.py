@@ -1,18 +1,16 @@
 from django.db.models.base import ModelState
 
-from core.models import Item
+from core.models import Book
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
 
-
 from rest_framework import serializers
 
 
-
-class ItemSerializer(serializers.ModelSerializer):
+class BookSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Item
+        model = Book
         fields = (
             'title',
             'price',
@@ -27,9 +25,7 @@ class ItemSerializer(serializers.ModelSerializer):
         )
 
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
-
