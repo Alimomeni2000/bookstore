@@ -68,6 +68,7 @@ class Book(models.Model):
     translator = models.CharField(max_length=100, blank=True, null=True)
     topic = models.CharField(max_length=100, blank=True, null=False)
     publishers = models.CharField(max_length=100, blank=True, null=False)
+    special_offer = models.BooleanField(default=False)
     image = models.ImageField(blank=True, null=True, upload_to='book')
     imageslide = models.ImageField(
         blank=True, null=True, upload_to='book')
