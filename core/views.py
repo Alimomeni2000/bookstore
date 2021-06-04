@@ -17,7 +17,7 @@ from django.views.generic import ListView, DetailView, View
 from django.urls import reverse_lazy
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 
-from .models import Item, OrderItem, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile
+from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -30,7 +30,7 @@ def create_ref_code():
 
 def products(request):
     context = {
-        'items': Item.objects.all()
+        'books': Book.objects.all()
     }
     return render(request, "products.html", context)
 
@@ -45,13 +45,13 @@ def is_valid_form(values):
 
 class HomeView(ListView):
 
-    model = Item
+    model = Book
 
     # def get_queryset(self):
     #     context={'slides': SlidShow.objects.filter(status=True)}
     #     return context
     # def get_queryset(self):
-    #     context = {'books': Item.objects.all(),
+    #     context = {'books': Book.objects.all(),
     #                }
     #     return context
 
@@ -83,66 +83,66 @@ class OrderSummaryView(LoginRequiredMixin, View):
             return redirect("/")
 
 
-class ItemDetailView(DetailView):
+class BookDetailView(DetailView):
 
     def get_object(self):
-        return get_object_or_404(Item.objects.all(), pk=self.kwargs.get('pk'))
+        return get_object_or_404(Book.objects.all(), pk=self.kwargs.get('pk'))
 
     template_name = "product.html"
 
 
 @login_required
 def add_to_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
-    order_item, created = OrderItem.objects.get_or_create(
-        item=item,
+    book = get_object_or_404(Book, slug=slug)
+    order_book, created = OrderBook.objects.get_or_create(
+        book=book,
         user=request.user,
         ordered=False
     )
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
-        # check if the order item is in the order
-        if order.items.filter(item__slug=item.slug).exists():
-            order_item.quantity += 1
-            order_item.save()
-            messages.info(request, "This item quantity was updated.")
+        # check if the order book is in the order
+        if order.books.filter(book__slug=book.slug).exists():
+            order_book.quantity += 1
+            order_book.save()
+            messages.info(request, "This book quantity was updated.")
             return redirect("core:order-summary")
         else:
-            order.items.add(order_item)
-            messages.info(request, "This item was added to your cart.")
+            order.books.add(order_book)
+            messages.info(request, "This book was added to your cart.")
             return redirect("core:order-summary")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
-        order.items.add(order_item)
-        messages.info(request, "This item was added to your cart.")
+        order.books.add(order_book)
+        messages.info(request, "This book was added to your cart.")
         return redirect("core:order-summary")
 
 
 @login_required
 def remove_from_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
+    book = get_object_or_404(Book, slug=slug)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False
     )
     if order_qs.exists():
         order = order_qs[0]
-        # check if the order item is in the order
-        if order.items.filter(item__slug=item.slug).exists():
-            order_item = OrderItem.objects.filter(
-                item=item,
+        # check if the order book is in the order
+        if order.books.filter(book__slug=book.slug).exists():
+            order_book = OrderBook.objects.filter(
+                book=book,
                 user=request.user,
                 ordered=False
             )[0]
-            order.items.remove(order_item)
-            order_item.delete()
-            messages.info(request, "This item was removed from your cart.")
+            order.books.remove(order_book)
+            order_book.delete()
+            messages.info(request, "This book was removed from your cart.")
             return redirect("core:order-summary")
         else:
-            messages.info(request, "This item was not in your cart")
+            messages.info(request, "This book was not in your cart")
             return redirect("core:product", slug=slug)
     else:
         messages.info(request, "You do not have an active order")
@@ -150,30 +150,30 @@ def remove_from_cart(request, slug):
 
 
 @login_required
-def remove_single_item_from_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
+def remove_single_book_from_cart(request, slug):
+    book = get_object_or_404(Book, slug=slug)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False
     )
     if order_qs.exists():
         order = order_qs[0]
-        # check if the order item is in the order
-        if order.items.filter(item__slug=item.slug).exists():
-            order_item = OrderItem.objects.filter(
-                item=item,
+        # check if the order book is in the order
+        if order.books.filter(book__slug=book.slug).exists():
+            order_book = Orderbook.objects.filter(
+                book=book,
                 user=request.user,
                 ordered=False
             )[0]
-            if order_item.quantity > 1:
-                order_item.quantity -= 1
-                order_item.save()
+            if order_book.quantity > 1:
+                order_book.quantity -= 1
+                order_book.save()
             else:
-                order.items.remove(order_item)
-            messages.info(request, "This item quantity was updated.")
+                order.books.remove(order_book)
+            messages.info(request, "This book quantity was updated.")
             return redirect("core:order-summary")
         else:
-            messages.info(request, "This item was not in your cart")
+            messages.info(request, "This book was not in your cart")
             return redirect("core:product", slug=slug)
     else:
         messages.info(request, "You do not have an active order")
@@ -491,10 +491,10 @@ class PaymentView(View):
 
                 # assign the payment to the order
 
-                order_items = order.items.all()
-                order_items.update(ordered=True)
-                for item in order_items:
-                    item.save()
+                order_books = order.books.all()
+                order_books.update(ordered=True)
+                for book in order_books:
+                    book.save()
 
                 order.ordered = True
                 order.payment = payment
