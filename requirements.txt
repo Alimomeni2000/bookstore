@@ -12,4 +12,4 @@ django_countries
 django-allauth
 django-rest-auth
 dj-rest-auth
-
+django-decouple
