@@ -1,3 +1,4 @@
+from django.db.models.fields import IntegerField
 from django.db.models.signals import post_save
 from django.conf import settings
 from django_countries.fields import CountryField
@@ -6,26 +7,33 @@ from django.db.models import Sum
 from django.shortcuts import reverse
 
 
-LABEL_CHOICES = (
-    ('P', 'primary'),
-    ('S', 'secondary'),
-    ('D', 'danger')
+STATUS_CHOICES = (
+    ('a', 'موجود'),
+    ('ci', 'عدم موجودی'),
+    ('s', 'به زودی')
 )
 
 ADDRESS_CHOICES = (
-    ('B', 'Billing'),
-    ('S', 'Shipping'),
+    ('B', 'صورت حساب'),
+    ('S', 'خریدکردن'),
 )
 
 
 class Category(models.Model):
     parent = models.ForeignKey(
         'self', default=None, null=True, blank=True, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=20)
-    status = models.BooleanField(default=True)
+    title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
+    slug = models.SlugField(max_length=20, verbose_name='آدرس دسته بندی')
+    status = models.BooleanField(default=True, verbose_name='وضعیت')
+    image = models.ImageField(blank=True, null=True,
+                              upload_to='category', verbose_name='تصویر')
+    icone = models.ImageField(
+        blank=True, null=True, upload_to='category', verbose_name='آیکون')
 
     class Meta:
+        verbose_name = "دسته‌بندی"
+        verbose_name_plural = "دسته‌بندی ها"
+
         ordering = ['parent__id']
 
     def __str__(self):
@@ -38,21 +46,35 @@ class UserProfile(models.Model):
     stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
     one_click_purchasing = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = "پروفایل کاربر"
+        verbose_name_plural = "پروفایل کاربران"
+
     def __str__(self):
         return self.user.username
 
 
-class Item(models.Model):
+class Book(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.ManyToManyField(Category)
-    label = models.CharField(choices=LABEL_CHOICES, max_length=1)
+    category = models.ManyToManyField(Category,)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=2)
     slug = models.SlugField()
     description = models.TextField()
-    image = models.ImageField(blank=True, null=True, upload_to='book_image')
+    pages = models.IntegerField(blank=True, null=True)
+    year = models.IntegerField(blank=True, null=False)
+    author = models.CharField(max_length=10, blank=True, null=False)
+    translator = models.CharField(max_length=100, blank=True, null=True)
+    topic = models.CharField(max_length=100, blank=True, null=False)
+    publishers = models.CharField(max_length=100, blank=True, null=False)
+    image = models.ImageField(blank=True, null=True, upload_to='book')
     imageslide = models.ImageField(
-        blank=True, null=True, upload_to='book_image')
+        blank=True, null=True, upload_to='book')
+
+    class Meta:
+        verbose_name = "کتاب"
+        verbose_name_plural = "کتاب ها"
 
     def __str__(self):
         return self.title
@@ -74,39 +96,45 @@ class Item(models.Model):
 
 
 class SlidShow(models.Model):
-    Item = models.OneToOneField(Item, on_delete=models.CASCADE)
+    book = models.OneToOneField(Book, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-Item__price']
+        verbose_name = "اسلایدر"
+        verbose_name_plural = "اسلایدر"
+        ordering = ['-book__price']
 
     def __str__(self):
-        return self.Item.title
+        return self.book.title
 
 
-class OrderItem(models.Model):
+class OrderBook(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
+    class Meta:
+        verbose_name = "سفارش کتاب"
+        verbose_name_plural = "سفارشات کتاب"
+
     def __str__(self):
-        return f"{self.quantity} of {self.item.title}"
+        return f"{self.quantity} of {self.book.title}"
 
-    def get_total_item_price(self):
-        return self.quantity * self.item.price
+    def get_total_book_price(self):
+        return self.quantity * self.book.price
 
-    def get_total_discount_item_price(self):
-        return self.quantity * self.item.discount_price
+    def get_total_discount_book_price(self):
+        return self.quantity * self.book.discount_price
 
     def get_amount_saved(self):
-        return self.get_total_item_price() - self.get_total_discount_item_price()
+        return self.get_total_book_price() - self.get_total_discount_book_price()
 
     def get_final_price(self):
-        if self.item.discount_price:
-            return self.get_total_discount_item_price()
-        return self.get_total_item_price()
+        if self.book.discount_price:
+            return self.get_total_discount_book_price()
+        return self.get_total_book_price()
 
 
 class Address(models.Model):
@@ -124,7 +152,8 @@ class Address(models.Model):
         return self.user.username
 
     class Meta:
-        verbose_name_plural = 'Addresses'
+        verbose_name = "آدرس"
+        verbose_name_plural = "آدرس ها"
 
 
 class Payment(models.Model):
@@ -137,6 +166,10 @@ class Payment(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        verbose_name = "پرداخت"
+        verbose_name_plural = "پرداخت ها"
+
 
 class Coupon(models.Model):
     code = models.CharField(max_length=20)
@@ -145,12 +178,16 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
 
+    class Meta:
+        verbose_name = "کوپن"
+        verbose_name_plural = "کوپن ها"
+
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
-    items = models.ManyToManyField(OrderItem)
+    books = models.ManyToManyField(OrderBook)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
@@ -170,10 +207,14 @@ class Order(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        verbose_name = "سفارش"
+        verbose_name_plural = "سفارشات"
+
     def get_total(self):
         total = 0
-        for order_item in self.items.all():
-            total += order_item.get_final_price()
+        for order_Book in self.books.all():
+            total += order_Book.get_final_price()
         if self.coupon:
             total -= self.coupon.amount
         return total
@@ -184,6 +225,10 @@ class Refund(models.Model):
     reason = models.TextField()
     accepted = models.BooleanField(default=False)
     email = models.EmailField()
+
+    class Meta:
+        verbose_name = "برگشت داده شده"
+        verbose_name_plural = "برگشتی  ها"
 
     def __str__(self):
         return f"{self.pk}"
