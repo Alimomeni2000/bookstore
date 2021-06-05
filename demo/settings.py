@@ -5,12 +5,11 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
 ALLOWED_HOSTS = []
 # TRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
 # STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
-STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
-STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
+# STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
+# STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
 LOGIN_REDIRECT_URL = "core:home"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
@@ -28,19 +27,34 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'allauth.socialaccount',
+    'rest_framework',
+
+
+    'rest_framework.authtoken',
+    'rest_auth',
+    'dj_rest_auth',
+    'comment',
+    'star_ratings',
+
 
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
-    # 'account.apps.AccountConfig',
+    'accounts.apps.AccountsConfig',
 
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'rest_auth'
 
 
 ]
+
+SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'papyrusbook1@gmail.com'
+EMAIL_HOST_PASSWORD = 'ali13791379'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -129,3 +143,5 @@ REST_FRAMEWORK = {
 
 
 SITE_ID = 1
+
+STAR_RATINGS_STAR_HEIGHT = 15

@@ -1,4 +1,7 @@
 {% extends "base.html" %} {% block content %}
+{% load comment_tags %} 
+{% load ratings %}
+
 
 <main class="mt-5 pt-4">
   <div class="container dark-grey-text mt-5">
@@ -85,7 +88,7 @@
           <p class="lead font-weight-bold">توضیحات</p>
 
           <p>{{ object.description }}</p>
-
+          
           {% comment %}
           <form class="d-flex justify-content-left">
             <!-- Default input -->
@@ -103,10 +106,14 @@
           </form>
           {% endcomment %}
         </div>
+    
         <!--Content-->
       </div>
       <!--Grid column-->
     </div>
+{% ratings object %}
+        {% render_comments object request %}
+          {% include_bootstrap %} 
     <!--Grid row-->
 
     <hr />

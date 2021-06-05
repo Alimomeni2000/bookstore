@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block content %}
+{% load ratings %}
 
 <main>
   <div class="container">
@@ -92,11 +93,12 @@
                       {% endif %}
                       
 
-                     
+
                       </strong>
               </h5>
                   </a>
-
+<br>
+                     {% ratings book %}
               <h4 class="font-weight-bold blue-text">
                 <strong>
                   {% if book.discount_price %} {{ book.discount_price }}  تومان

@@ -1,0 +1,10 @@
+{% extends "star_ratings/widget_base.html" %}
+{% block rating_detail %}
+{% if not user.is_authenticated %}
+
+ <a class="nav-link waves-effect" href="{% url 'account_login' %}">
+        <small class="clearfix d-none d-sm-inline-block">برای رای دادن باید  وارد  
+           شوید</small></a>
+{% endif %}
+{% endblock %} 
+         

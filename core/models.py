@@ -5,10 +5,14 @@ from django_countries.fields import CountryField
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
+from django.contrib.contenttypes.fields import GenericRelation
+
+from comment.models import Comment
+
 
 class CategoryManager(models.Manager):
-	def active(self):
-		return self.filter(status=True)
+    def active(self):
+        return self.filter(status=True)
 
 
 ADDRESS_CHOICES = (
@@ -29,6 +33,7 @@ class Category(models.Model):
         blank=True, null=True, upload_to='category', verbose_name='آیکون')
 
     objects = CategoryManager()
+
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی ها"
@@ -66,6 +71,7 @@ class Book(models.Model):
     translator = models.CharField(max_length=100, blank=True, null=True)
     publishers = models.CharField(max_length=100, blank=True, null=False)
     special_offer = models.BooleanField(default=False)
+    comments = GenericRelation(Comment)
     image = models.ImageField(blank=True, null=True, upload_to='book')
     imageslide = models.ImageField(
         blank=True, null=True, upload_to='book')
