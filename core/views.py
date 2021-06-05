@@ -79,7 +79,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             }
             return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
-            messages.warning(self.request, "You do not have an active order")
+            messages.warning(self.request, "شما سفارش فعالی ندارید.")
             return redirect("/")
 
 
@@ -106,18 +106,18 @@ def add_to_cart(request, slug):
         if order.books.filter(book__slug=book.slug).exists():
             order_book.quantity += 1
             order_book.save()
-            messages.info(request, "This book quantity was updated.")
+            messages.info(request, "تعداد کتاب ها آپدیت شد.")
             return redirect("core:order-summary")
         else:
             order.books.add(order_book)
-            messages.info(request, "This book was added to your cart.")
+            messages.info(request, "این کتاب به سبد خرید شما اضافه شد.")
             return redirect("core:order-summary")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
         order.books.add(order_book)
-        messages.info(request, "This book was added to your cart.")
+        messages.info(request, "این کتاب به سبد خرید شما اضافه شد.")
         return redirect("core:order-summary")
 
 
@@ -139,13 +139,13 @@ def remove_from_cart(request, slug):
             )[0]
             order.books.remove(order_book)
             order_book.delete()
-            messages.info(request, "This book was removed from your cart.")
+            messages.info(request, "این کتاب از سبد خرید شما حذف شد.")
             return redirect("core:order-summary")
         else:
-            messages.info(request, "This book was not in your cart")
+            messages.info(request, "این کتاب در سبد خرید شما وجود ندارد .")
             return redirect("core:product", slug=slug)
     else:
-        messages.info(request, "You do not have an active order")
+        messages.info(request, "شما سفارش فعالی ندارید.")
         return redirect("core:product", slug=slug)
 
 
@@ -160,7 +160,7 @@ def remove_single_book_from_cart(request, slug):
         order = order_qs[0]
         # check if the order book is in the order
         if order.books.filter(book__slug=book.slug).exists():
-            order_book = Orderbook.objects.filter(
+            order_book = OrderBook.objects.filter(
                 book=book,
                 user=request.user,
                 ordered=False
@@ -170,13 +170,13 @@ def remove_single_book_from_cart(request, slug):
                 order_book.save()
             else:
                 order.books.remove(order_book)
-            messages.info(request, "This book quantity was updated.")
+            messages.info(request, "تعداد کتاب ها آپدیت شد.")
             return redirect("core:order-summary")
         else:
-            messages.info(request, "This book was not in your cart")
+            messages.info(request, "این کتاب در سبد خرید شما وجود ندارد ")
             return redirect("core:product", slug=slug)
     else:
-        messages.info(request, "You do not have an active order")
+        messages.info(request, "شما سفارش فعالی ندارید. ")
         return redirect("core:product", slug=slug)
 
 
@@ -185,7 +185,7 @@ def get_coupon(request, code):
         coupon = Coupon.objects.get(code=code)
         return coupon
     except ObjectDoesNotExist:
-        messages.info(request, "This coupon does not exist")
+        messages.info(request, "این کد تخفیف وجود ندارد.")
         return redirect("core:checkout")
 
 
@@ -199,10 +199,10 @@ class AddCouponView(View):
                     user=self.request.user, ordered=False)
                 order.coupon = get_coupon(self.request, code)
                 order.save()
-                messages.success(self.request, "Successfully added coupon")
+                messages.success(self.request, "کد تخفیف با موفیت اضافه شد .")
                 return redirect("core:checkout")
             except ObjectDoesNotExist:
-                messages.info(self.request, "You do not have an active order")
+                messages.info(self.request, "شما سفارش فعالی ندارید. ")
                 return redirect("core:checkout")
 
 
@@ -233,11 +233,11 @@ class RequestRefundView(View):
                 refund.email = email
                 refund.save()
 
-                messages.info(self.request, "Your request was received.")
+                messages.info(self.request, "درخواست شما دریافت شد.")
                 return redirect("core:request-refund")
 
             except ObjectDoesNotExist:
-                messages.info(self.request, "This order does not exist.")
+                messages.info(self.request, "این کتاب وجود ندارد.")
                 return redirect("core:request-refund")
 
 
@@ -272,7 +272,7 @@ class CheckoutView(View):
                     {'default_billing_address': billing_address_qs[0]})
             return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
-            messages.info(self.request, "You do not have an active order")
+            messages.info(self.request, "شما سفارش فعالی ندارید.")
             return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
@@ -296,10 +296,9 @@ class CheckoutView(View):
                         order.save()
                     else:
                         messages.info(
-                            self.request, "No default shipping address available")
+                            self.request, "آدرس پستی پیس فرض در وجود ندارد")
                         return redirect('core:checkout')
                 else:
-                    print("User is entering a new shipping address")
                     shipping_address1 = form.cleaned_data.get(
                         'shipping_address')
                     shipping_address2 = form.cleaned_data.get(
@@ -330,7 +329,7 @@ class CheckoutView(View):
 
                     else:
                         messages.info(
-                            self.request, "Please fill in the required shipping address fields")
+                            self.request, "لطفا همه فیلد های مربوط به آدرس را پر کنید . ")
 
                 use_default_billing = form.cleaned_data.get(
                     'use_default_billing')
@@ -347,7 +346,6 @@ class CheckoutView(View):
                     order.save()
 
                 elif use_default_billing:
-                    print("Using the defualt billing address")
                     address_qs = Address.objects.filter(
                         user=self.request.user,
                         address_type='B',
@@ -359,10 +357,9 @@ class CheckoutView(View):
                         order.save()
                     else:
                         messages.info(
-                            self.request, "No default billing address available")
+                            self.request, "آدرس پستی پیس فرض در وجود ندارد")
                         return redirect('core:checkout')
                 else:
-                    print("User is entering a new billing address")
                     billing_address1 = form.cleaned_data.get(
                         'billing_address')
                     billing_address2 = form.cleaned_data.get(
@@ -393,7 +390,7 @@ class CheckoutView(View):
 
                     else:
                         messages.info(
-                            self.request, "Please fill in the required billing address fields")
+                            self.request, "لطفا همه فیلد های مربوط به آدرس را پر کنید . ")
 
                 payment_option = form.cleaned_data.get('payment_option')
 
@@ -403,10 +400,10 @@ class CheckoutView(View):
                     return redirect('core:payment', payment_option='paypal')
                 else:
                     messages.warning(
-                        self.request, "Invalid payment option selected")
+                        self.request, "گزینه پرداخت را انتخاب کنید. ")
                     return redirect('core:checkout')
         except ObjectDoesNotExist:
-            messages.warning(self.request, "You do not have an active order")
+            messages.warning(self.request, "شما سفارش فعالی ندارید.")
             return redirect("core:order-summary")
 
 
@@ -436,7 +433,7 @@ class PaymentView(View):
             return render(self.request, "payment.html", context)
         else:
             messages.warning(
-                self.request, "You have not added a billing address")
+                self.request, "شما آدرسی را اضافه نکرده اید.")
             return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
@@ -501,7 +498,7 @@ class PaymentView(View):
                 order.ref_code = create_ref_code()
                 order.save()
 
-                messages.success(self.request, "Your order was successful!")
+                messages.success(self.request, "سفارش شما با موفقیت ثبت شد!")
                 return redirect("/")
 
             except stripe.error.CardError as e:
@@ -518,32 +515,33 @@ class PaymentView(View):
             except stripe.error.InvalidRequestError as e:
                 # Invalid parameters were supplied to Stripe's API
                 print(e)
-                messages.warning(self.request, "Invalid parameters")
+                messages.warning(
+                    self.request, "پارامترهای نامعتبری وجود دارد.")
                 return redirect("/")
 
             except stripe.error.AuthenticationError as e:
                 # Authentication with Stripe's API failed
                 # (maybe you changed API keys recently)
-                messages.warning(self.request, "Not authenticated")
+                messages.warning(self.request, "احراز هویت انجام نشده است!")
                 return redirect("/")
 
             except stripe.error.APIConnectionError as e:
                 # Network communication with Stripe failed
-                messages.warning(self.request, "Network error")
+                messages.warning(self.request, "خطای شبکه")
                 return redirect("/")
 
             except stripe.error.StripeError as e:
                 # Display a very generic error to the user, and maybe send
                 # yourself an email
                 messages.warning(
-                    self.request, "Something went wrong. You were not charged. Please try again.")
+                    self.request, "مشکلی پیش آمده است. هزینه ای از شما دریافت نشد. لطفا دوباره تلاش کنید.")
                 return redirect("/")
 
             except Exception as e:
                 # send an email to ourselves
                 messages.warning(
-                    self.request, "A serious error occurred. We have been notifed.")
+                    self.request, "یک خطای جدی رخ داد. به ما اطلاع داده شده است.")
                 return redirect("/")
 
-        messages.warning(self.request, "Invalid data received")
+        messages.warning(self.request, "اطلاعات نامعتبر دریافت شد.")
         return redirect("/payment/stripe/")

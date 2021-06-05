@@ -65,37 +65,52 @@
     <!--Section: Products v.3-->
     <section class="text-center mb-4">
       <div class="row wow fadeIn">
-        {% for item in object_list %}
+        {% for book in object_list %}
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
             <div class="view overlay">
-              <img src="{{ item.image.url }}" class="card-img-top" />
-              <a href="{{ item.get_absolute_url }}">
+              <img src="{{ book.image.url }}" class="card-img-top" />
+              <a href="{{ book.get_absolute_url }}">
                 <div class="mask rgba-white-slight"></div>
               </a>
             </div>
 
             <div class="card-body text-center">
               <a href="" class="grey-text">
-                <h5>{{ item.get_category_display }}</h5>
+                <h5>{{ book.get_category_display }}</h5>
               </a>
               <h5>
                 <strong>
-                  <a href="{{ item.get_absolute_url }}" class="dark-grey-text"
-                    >{{ item.title }}
+                  <a href="{{ book.get_absolute_url }}" class="dark-grey-text"
+                    >{{ book.title }}
+                    {% if book.special_offer %}
                     <span
-                      class="badge badge-pill {{ item.get_label_display }}-color"
-                      >NEW</span
+                
+                      class="badge badge-pill danger-color"
+                      >پیشنهاد ویژه</span
                     >
-                  </a>
-                </strong>
+                      {% endif %}
+                      
+
+                     
+                      </strong>
               </h5>
+                  </a>
 
               <h4 class="font-weight-bold blue-text">
                 <strong>
-                  ${% if item.discount_price %} {{ item.discount_price }} 
-                     {% else %} {{ item.price }} {% endif %}
+                  {% if book.discount_price %} {{ book.discount_price }}  تومان
+                     {% else %} {{ book.price }} تومان{% endif %}
                 </strong>
+                <br>
+                <br>
+                <strong> {% if book.status %}
+                      <span    class="badge badge-pill success-color"
+                          >موجود</span>
+                          {% else %}
+                          <span    class="badge badge-pill danger-color"
+                          >عدم موجودی</span>
+                      {% endif %}</strong>
               </h4>
             </div>
           </div>

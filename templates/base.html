@@ -13,6 +13,8 @@
   <link href="{% static 'core/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/mdb.min.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/style.min.css' %}" rel="stylesheet">
+  <link href="{% static 'core/css/mystyle.css' %}" rel="stylesheet">
+
 
 
   <style type="text/css">
@@ -59,6 +61,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+
         {% endfor %}
     {% endif %}
     </div>
@@ -70,9 +73,12 @@
     {% endblock %}
 
     {% include "footer.html" %}
+    </div>
+
     {% include "scripts.html" %}
 
     {% block extra_scripts %}
     {% endblock extra_scripts %}
+    
 </body>
 </html>

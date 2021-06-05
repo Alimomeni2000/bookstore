@@ -6,12 +6,10 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 
+class CategoryManager(models.Manager):
+	def active(self):
+		return self.filter(status=True)
 
-STATUS_CHOICES = (
-    ('a', 'موجود'),
-    ('ci', 'عدم موجودی'),
-    ('s', 'به زودی')
-)
 
 ADDRESS_CHOICES = (
     ('B', 'صورت حساب'),
@@ -23,18 +21,17 @@ class Category(models.Model):
     parent = models.ForeignKey(
         'self', default=None, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
-    slug = models.SlugField(max_length=20, verbose_name='آدرس دسته بندی')
+    slug = models.SlugField(max_length=200, verbose_name='آدرس دسته بندی')
     status = models.BooleanField(default=True, verbose_name='وضعیت')
     image = models.ImageField(blank=True, null=True,
                               upload_to='category', verbose_name='تصویر')
     icone = models.ImageField(
         blank=True, null=True, upload_to='category', verbose_name='آیکون')
 
+    objects = CategoryManager()
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی ها"
-
-        ordering = ['parent__id']
 
     def __str__(self):
         return self.title
@@ -55,18 +52,18 @@ class UserProfile(models.Model):
 
 
 class Book(models.Model):
+
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
     category = models.ManyToManyField(Category,)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=2)
+    status = models.BooleanField(default=True)
     slug = models.SlugField()
     description = models.TextField()
     pages = models.IntegerField(blank=True, null=True)
     year = models.IntegerField(blank=True, null=False)
-    author = models.CharField(max_length=10, blank=True, null=False)
+    author = models.CharField(max_length=200, blank=True, null=False)
     translator = models.CharField(max_length=100, blank=True, null=True)
-    topic = models.CharField(max_length=100, blank=True, null=False)
     publishers = models.CharField(max_length=100, blank=True, null=False)
     special_offer = models.BooleanField(default=False)
     image = models.ImageField(blank=True, null=True, upload_to='book')
@@ -228,8 +225,8 @@ class Refund(models.Model):
     email = models.EmailField()
 
     class Meta:
-        verbose_name = "برگشت داده شده"
-        verbose_name_plural = "برگشتی  ها"
+        verbose_name = "مرجوعی"
+        verbose_name_plural = "مرجوعی ها"
 
     def __str__(self):
         return f"{self.pk}"
