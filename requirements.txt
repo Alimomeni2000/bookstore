@@ -13,3 +13,4 @@ django-allauth
 django-rest-auth
 dj-rest-auth
 django-decouple
+ django-comments-dab-2.6.1
