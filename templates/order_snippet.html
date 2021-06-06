@@ -8,9 +8,9 @@
     <li class="list-group-book d-flex justify-content-between lh-condensed">
         <div>
         <h6 class="my-0">{{ order_book.quantity }} x {{ order_book.book.title}}</h6>
-        <small class="text-muted">{{ order_book.book.description}}</small>
+        <small class="text-muted">{{ order_book.book.author}}</small>
         </div>
-        <span class="text-muted">${{ order_book.get_final_price }}</span>
+        <span class="text-muted">{{ order_book.get_final_price }} تومان </span>
     </li>
     {% endfor %}
     {% if order.coupon %}
@@ -29,12 +29,12 @@
     </ul>
 
     {% if DISPLAY_COUPON_FORM %}
-    <form class="card p-2" action="{% url 'core:add-coupon' %}" method="POST">
+    <form class="card p-2"  action="{% url 'core:add-coupon' %}" method="POST">
         {% csrf_token %}
         <div class="input-group">
             {{ couponform.code }}
-            <div class="input-group-append">
-            <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">چک کردن</button>
+            <div   class=" input-group-append">
+            <button class="btn btn-secondary btn-md waves-effect m-0" placeholder='کدپستی بدون خط فاصله'type="submit">چک کردن</button>
             </div>
         </div>
     </form>

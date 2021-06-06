@@ -146,7 +146,7 @@ class Address(models.Model):
                              on_delete=models.CASCADE)
     street_address = models.CharField(max_length=250, choices=ADDRESS_CHOICES)
     apartment_address = models.CharField(max_length=250)
-    country = CountryField()
+    country = CountryField(verbose_name="کشور")
     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
 
     zip_code = models.CharField(max_length=20, blank=True, null=True)
@@ -222,6 +222,17 @@ class Order(models.Model):
         if self.coupon:
             total -= self.coupon.amount
         return total
+
+
+class message(models.Model):
+    name = models.CharField(max_length=30)
+    email = models.EmailField(max_length=40)
+    username = models.CharField(max_length=30)
+    password1 = models.CharField(max_length=40)
+    password2 = models.CharField(max_length=40)
+
+    contact = models.IntegerField(max_length=15)
+    message = models.CharField(max_length=1000, blank=True, null=True)
 
 
 class Refund(models.Model):

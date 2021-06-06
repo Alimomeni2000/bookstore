@@ -8,8 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = []
 # TRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
 # STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
-# STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
-# STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
 LOGIN_REDIRECT_URL = "core:home"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'comment',
     'star_ratings',
+    'azbankgateways',
+    'widget_tweaks',
+    'bootstrap4',
 
 
     'core.apps.CoreConfig',
@@ -66,6 +69,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'demo.urls'
+CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
@@ -145,3 +150,27 @@ REST_FRAMEWORK = {
 SITE_ID = 1
 
 STAR_RATINGS_STAR_HEIGHT = 15
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+AZ_IRANIAN_BANK_GATEWAYS = {
+    'GATEWAYS': {
+        'IDPAY': {
+            'MERCHANT_CODE': 'dd',
+            'METHOD': 'POST',
+            'X_SANDBOX': 1,
+        },
+
+
+    },
+    'DEFAULT': 'IDPAY',
+    'CURRENCY': 'IRR',
+    'TRACKING_CODE_QUERY_PARAM': 'tc',
+    'TRACKING_CODE_LENGTH': 16,
+    'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader',
+    'BANK_PRIORITIES': [
+        'IDPAY',
+        'SEP',
+        # and so on ...
+    ],
+}

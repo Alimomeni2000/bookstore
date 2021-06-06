@@ -1,0 +1,9 @@
+.butt {
+    width: 50%;
+    border-radius: 20px !important;
+}
+
+.div-butt {
+    justify-content: center;
+    display: flex; align-items: center;
+}

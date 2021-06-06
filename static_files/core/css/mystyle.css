@@ -17,4 +17,6 @@
 .bake{
     background-color: red !important;
 }
-  
+.form-check-label {
+    margin-right: 20px !important
+}

@@ -3,7 +3,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
-
+# from azbankgateways.urls import az_bank_gateways_urls
+# from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -18,6 +19,10 @@ urlpatterns = [
     path('api/', include('comment.api.urls')),
     path('ratings/', include('star_ratings.urls',
                              namespace='ratings')),
+    # path('bankgateways/', az_bank_gateways_urls, name='azbankgateways'),
+    # path('go_to_gateway/', views.go_to_gateway_view),
+
+
 
 ]
 

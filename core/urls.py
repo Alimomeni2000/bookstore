@@ -11,7 +11,8 @@ from .views import (
     remove_single_book_from_cart,
     PaymentView,
     AddCouponView,
-    RequestRefundView
+    RequestRefundView,
+    # go_to_gateway_view
 )
 
 app_name = 'core'
@@ -30,5 +31,7 @@ urlpatterns = [
     path('remove-book-from-cart/<slug>/', remove_single_book_from_cart,
          name='remove-single-book-from-cart'),
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
-    path('request-refund/', RequestRefundView.as_view(), name='request-refund')
+    path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
+    # path('go_to_gateway/', go_to_gateway_view, name='go_to_gateway'),
+
 ]

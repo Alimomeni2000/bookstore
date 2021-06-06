@@ -1,0 +1,123 @@
+@font-face {
+    font-family: Sahel;
+    src: url('Sahel.eot');
+    src: url('Sahel.eot?#iefix') format('embedded-opentype'),
+         url('Sahel.woff2') format('woff2'),
+         url('Sahel.woff') format('woff'),
+         url('Sahel.ttf') format('truetype');
+  }
+  
+  body {
+       background: #FFF;
+
+      direction: rtl !important;
+      text-align: right !important;
+      font-family: "Sahel" !important;
+      font-size: 16px !important;
+  }
+a, a:hover {
+    color: #EF394E !important;
+}
+.mystlye{
+    margin-top: -50px !important;
+    margin-bottom: 50px !important;
+}
+form {
+    background-color: #FFF;
+    padding: 3rem 5rem;
+    box-shadow: 0px 10px 34px -15px rgb(19, 19, 19);
+}
+.form-title {
+    margin-bottom: 4rem;
+    margin-top: -2rem;
+
+}
+.form-title h3 {
+    font-family: "Sahel" !important;
+
+    text-align: center;
+    font-size: 3rem;
+    color: #232933;
+}
+.field-icon {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    right: 25rem;
+    top: 15%;
+    left: 1rem;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    z-index: 1334;
+}
+form[role=login] {
+    font: 15px/1.6em Lato, serif;
+    max-width: 400px;
+    margin: 100px auto 0;
+    color: #767A7F;
+}
+form[role=login] div {
+    position: relative;
+}
+form[role=login] span.glyphicon {
+    color: #ADADAD;
+}
+form[role=login] input,
+form[role=login] button {
+    font-family: IRANSans;
+    font-size: 16px;
+}
+form[role=login] input,
+form[role=login] .input-group-addon {
+    border: 1px solid rgb(71, 71, 71) !important;
+
+    background: transparent;
+    color: #767A7F;
+}
+form[role=login] .input-group-addon {
+    background: transparent;
+    font-size: 20px;
+    color: #606468;
+}
+
+.form-check-label{
+    margin-top: 17px !important;
+    margin-right: 20px !important;
+}
+
+form[role=login] > section {
+    text-align: center;
+    display: flex;
+    margin: 15px 0;
+    justify-content: space-around;
+    color: #6C757D;
+}
+form[role=login] > section span {
+    color: #767A7F;
+}
+form[role=login] button {
+    background: #EF394E;
+    border: none;
+    text-shadow: 1px 1px 1px #EF394E;
+    font-size: 20px;
+    margin-top: 25px;
+    border-radius: 2px;
+}
+form[role=login] button:hover {
+    background: #EF394E;
+}
+form[role=login] input[type=text]:focus,
+form[role=login] input[type=password]:focus {
+    background: #F8F8F8;
+    box-shadow: none;
+}
+.form-group {
+    margin: 10px 0;
+}
+.form-group input,
+.form-group .input-group-addon {
+    border-radius: 1px;
+}

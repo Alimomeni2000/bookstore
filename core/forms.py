@@ -1,7 +1,12 @@
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django import forms
+from django.db.models.base import ModelBase
+from django.forms.fields import CharField, EmailField
+from django.forms.widgets import PasswordInput
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
-
+from .models import message
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),

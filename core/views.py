@@ -1,3 +1,5 @@
+from django.urls import reverse
+from azbankgateways import bankfactories, default_settings as settings
 import random
 import string
 
@@ -66,6 +68,17 @@ def slideShowView(request):
 
 
 class Login(LoginView):
+
+    def form_valid(self, request, form):
+        context = {}
+        form = LoginForm(request.POST or None)
+        context['form'] = form
+        context['form'] = form
+        if request.POST:
+            if form.is_valid():
+                temp = form.cleaned_data.get("singup")
+                print(temp)
+
     def get_success_url(self):
         return redirect('home.html')
 
@@ -395,7 +408,7 @@ class CheckoutView(View):
                 payment_option = form.cleaned_data.get('payment_option')
 
                 if payment_option == 'S':
-                    return redirect('core:payment', payment_option='stripe')
+                    return redirect('core:payment', payment_option='paypal')
                 elif payment_option == 'P':
                     return redirect('core:payment', payment_option='paypal')
                 else:
@@ -407,7 +420,11 @@ class CheckoutView(View):
             return redirect("core:order-summary")
 
 
+global amount
+
+
 class PaymentView(View):
+
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         if order.billing_address:
@@ -545,3 +562,25 @@ class PaymentView(View):
 
         messages.warning(self.request, "اطلاعات نامعتبر دریافت شد.")
         return redirect("/payment/stripe/")
+
+
+# def go_to_gateway_view(request):
+
+#     # خواندن مبلغ از هر جایی که مد نظر است
+#     amount = 60000
+#     # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
+#     user_mobile_number = '+989112221234'  # اختیاری
+
+#     factory = bankfactories.BankFactory()
+#     bank = factory.create()  # or factory.create(bank_models.BankType.BMI) or set identifier
+#     bank.set_request(request)
+#     bank.set_amount(amount)
+#     # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
+#     bank.set_client_callback_url('/callback-geteway')
+#     bank.set_mobile_number(user_mobile_number)  # اختیاری
+
+#     # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
+#     # پرداخت برقرار کنید.
+#     bank.ready()
+#     # هدایت کاربر به درگاه بانک
+#     return bank.redirect_gateway()
