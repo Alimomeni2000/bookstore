@@ -12,6 +12,7 @@ from .views import (
     PaymentView,
     AddCouponView,
     RequestRefundView,
+    CategoryList,
     # go_to_gateway_view
 )
 
@@ -22,6 +23,8 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
+	path('category/<slug:slug>', CategoryList.as_view(), name="category"),
+	path('category/<slug:slug>/page/<int:page>', CategoryList.as_view(), name="category"),
 
     path('product/<int:pk>', BookDetailView.as_view(), name='product'),
 

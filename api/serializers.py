@@ -11,19 +11,7 @@ from rest_framework import serializers
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = (
-            'title',
-            'price',
-            'discount_price',
-
-            'category',
-            'label',
-            'slug',
-            'description',
-            'image',
-            'imageslide',
-        )
-
+        fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

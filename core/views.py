@@ -19,7 +19,7 @@ from django.views.generic import ListView, DetailView, View
 from django.urls import reverse_lazy
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 
-from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile
+from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile,Category
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -48,15 +48,6 @@ def is_valid_form(values):
 class HomeView(ListView):
 
     model = Book
-
-    # def get_queryset(self):
-    #     context={'slides': SlidShow.objects.filter(status=True)}
-    #     return context
-    # def get_queryset(self):
-    #     context = {'books': Book.objects.all(),
-    #                }
-    #     return context
-
     template_name = "home.html"
 
 
@@ -65,6 +56,23 @@ def slideShowView(request):
     return render(request, 'home.html',
                   {'slides': SlidShow.objects.filter(status=True)
                    })
+
+
+class CategoryList(ListView):
+	# paginate_by = 5
+	# template_name = "category.html"
+
+	def get_queryset(self):
+		global category
+		slug = self.kwargs.get('slug')
+		category = get_object_or_404(Category.objects.active(), slug=slug)
+		return category.books.all()
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['category'] = category
+		return context
+
 
 
 class Login(LoginView):
@@ -99,7 +107,11 @@ class OrderSummaryView(LoginRequiredMixin, View):
 class BookDetailView(DetailView):
 
     def get_object(self):
-        return get_object_or_404(Book.objects.all(), pk=self.kwargs.get('pk'))
+        book= get_object_or_404(Book.objects.all(), pk=self.kwargs.get('pk'))
+        ip_address =self.request.user.ip_address
+        if ip_address not in book.hits.all():
+            book.hits.add(ip_address)
+        return book
 
     template_name = "product.html"
 

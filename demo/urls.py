@@ -14,7 +14,7 @@ urlpatterns = [
     path('api/rest-auth/', include('dj_rest_auth.urls')),
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
-    # path('api-token-auth/', obtain_auth_token),
+    path('api-token-auth/', obtain_auth_token),
     path('comment/', include('comment.urls')),
     path('api/', include('comment.api.urls')),
     path('ratings/', include('star_ratings.urls',

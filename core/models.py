@@ -9,6 +9,11 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from comment.models import Comment
 
+class IPAddress(models.Model):
+    ip_address = models.GenericIPAddressField(verbose_name="آدرس آی پی")
+
+    def __str__(self):
+        return self.ip_address
 
 class CategoryManager(models.Manager):
     def active(self):
@@ -23,7 +28,7 @@ ADDRESS_CHOICES = (
 
 class Category(models.Model):
     parent = models.ForeignKey(
-        'self', default=None, null=True, blank=True, on_delete=models.CASCADE)
+        'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children")
     title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
     slug = models.SlugField(max_length=200, verbose_name='آدرس دسته بندی')
     status = models.BooleanField(default=True, verbose_name='وضعیت')
@@ -37,6 +42,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی ها"
+        ordering = ['parent__id']
 
     def __str__(self):
         return self.title
@@ -61,7 +67,7 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.ManyToManyField(Category,)
+    category = models.ManyToManyField(Category, related_name="books")
     status = models.BooleanField(default=True)
     slug = models.SlugField()
     description = models.TextField()
@@ -75,7 +81,7 @@ class Book(models.Model):
     image = models.ImageField(blank=True, null=True, upload_to='book')
     imageslide = models.ImageField(
         blank=True, null=True, upload_to='book')
-
+    hits= models.ManyToManyField(IPAddress,blank=True,related_name='hits',verbose_name='بازدیدها')
     class Meta:
         verbose_name = "کتاب"
         verbose_name_plural = "کتاب ها"
