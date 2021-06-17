@@ -9,11 +9,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from comment.models import Comment
 
-class IPAddress(models.Model):
-    ip_address = models.GenericIPAddressField(verbose_name="آدرس آی پی")
-
-    def __str__(self):
-        return self.ip_address
 
 class CategoryManager(models.Manager):
     def active(self):
@@ -28,13 +23,13 @@ ADDRESS_CHOICES = (
 
 class Category(models.Model):
     parent = models.ForeignKey(
-        'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children")
+        'self', default=None, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
     slug = models.SlugField(max_length=200, verbose_name='آدرس دسته بندی')
     status = models.BooleanField(default=True, verbose_name='وضعیت')
     image = models.ImageField(blank=True, null=True,
                               upload_to='category', verbose_name='تصویر')
-    icone = models.ImageField(
+    icon = models.ImageField(
         blank=True, null=True, upload_to='category', verbose_name='آیکون')
 
     objects = CategoryManager()
@@ -42,7 +37,6 @@ class Category(models.Model):
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی ها"
-        ordering = ['parent__id']
 
     def __str__(self):
         return self.title
@@ -51,8 +45,8 @@ class Category(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
-    one_click_purchasing = models.BooleanField(default=False)
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="نوار شناسه مشتری")
+    one_click_purchasing = models.BooleanField(default=False, verbose_name="خرید با یک کلیک")
 
     class Meta:
         verbose_name = "پروفایل کاربر"
@@ -63,25 +57,24 @@ class UserProfile(models.Model):
 
 
 class Book(models.Model):
-
-    title = models.CharField(max_length=100)
-    price = models.FloatField()
-    discount_price = models.FloatField(blank=True, null=True)
-    category = models.ManyToManyField(Category, related_name="books")
-    status = models.BooleanField(default=True)
-    slug = models.SlugField()
-    description = models.TextField()
-    pages = models.IntegerField(blank=True, null=True)
-    year = models.IntegerField(blank=True, null=False)
-    author = models.CharField(max_length=200, blank=True, null=False)
-    translator = models.CharField(max_length=100, blank=True, null=True)
-    publishers = models.CharField(max_length=100, blank=True, null=False)
-    special_offer = models.BooleanField(default=False)
-    comments = GenericRelation(Comment)
-    image = models.ImageField(blank=True, null=True, upload_to='book')
+    title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
+    price = models.FloatField(verbose_name="قیمت کتاب")
+    discount_price = models.FloatField(blank=True, null=True, verbose_name="تخفیف")
+    category = models.ManyToManyField(Category, verbose_name="دسته بندی")
+    status = models.BooleanField(default=True, verbose_name="وضعیت")
+    slug = models.SlugField(verbose_name="")
+    description = models.TextField(verbose_name="توضیحات")
+    pages = models.IntegerField(blank=True, null=True, verbose_name="تعداد صفحات")
+    year = models.IntegerField(blank=True, null=False, verbose_name="سال انتشار")
+    author = models.CharField(max_length=200, blank=True, null=False, verbose_name="نویسنده")
+    translator = models.CharField(max_length=100, blank=True, null=True, verbose_name="مترجم")
+    publishers = models.CharField(max_length=100, blank=True, null=False, verbose_name="ناشر")
+    special_offer = models.BooleanField(default=False, verbose_name="پیشنهاد ویژه")
+    comments = GenericRelation(Comment, verbose_name="نظرات")
+    image = models.ImageField(blank=True, null=True, upload_to='book', verbose_name="تصویر")
     imageslide = models.ImageField(
-        blank=True, null=True, upload_to='book')
-    hits= models.ManyToManyField(IPAddress,blank=True,related_name='hits',verbose_name='بازدیدها')
+        blank=True, null=True, upload_to='book', verbose_name="اسلاید تصویر")
+
     class Meta:
         verbose_name = "کتاب"
         verbose_name_plural = "کتاب ها"
@@ -106,8 +99,8 @@ class Book(models.Model):
 
 
 class SlidShow(models.Model):
-    book = models.OneToOneField(Book, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
+    book = models.OneToOneField(Book, on_delete=models.CASCADE, verbose_name="نام کتاب")
+    status = models.BooleanField(default=False, verbose_name="وضعیت")
 
     class Meta:
         verbose_name = "اسلایدر"
@@ -121,9 +114,9 @@ class SlidShow(models.Model):
 class OrderBook(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    ordered = models.BooleanField(default=False, verbose_name="وضعیت سفارش")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name="نام کتاب")
+    quantity = models.IntegerField(default=1, verbose_name="تعداد")
 
     class Meta:
         verbose_name = "سفارش کتاب"
@@ -150,13 +143,12 @@ class OrderBook(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=250, choices=ADDRESS_CHOICES)
-    apartment_address = models.CharField(max_length=250)
+    street_address = models.CharField(max_length=250, choices=ADDRESS_CHOICES, verbose_name="آدرس خیابان")
+    apartment_address = models.CharField(max_length=250, verbose_name="آدرس آپارتمان")
     country = CountryField(verbose_name="کشور")
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-
-    zip_code = models.CharField(max_length=20, blank=True, null=True)
-    default = models.BooleanField(default=False)
+    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES, verbose_name="")
+    zip_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="کد پستی")
+    default = models.BooleanField(default=False, verbose_name="پیشفرض")
 
     def __str__(self):
         return self.user.username
@@ -169,9 +161,9 @@ class Address(models.Model):
 class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE, blank=True, null=True)
-    strip_charge_id = models.CharField(max_length=50)
-    amount = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    strip_charge_id = models.CharField(max_length=50, verbose_name="شناسه نوار هزینه")
+    amount = models.FloatField(verbose_name="جمع کل خرید")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="زمان")
 
     def __str__(self):
         return self.user.username
@@ -182,8 +174,8 @@ class Payment(models.Model):
 
 
 class Coupon(models.Model):
-    code = models.CharField(max_length=20)
-    amount = models.FloatField()
+    code = models.CharField(max_length=20, verbose_name="کد کوپن")
+    amount = models.FloatField(verbose_name="مقدار")
 
     def __str__(self):
         return self.code
@@ -196,23 +188,25 @@ class Coupon(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    ref_code = models.CharField(max_length=20, blank=True, null=True)
-    books = models.ManyToManyField(OrderBook)
-    start_date = models.DateTimeField(auto_now_add=True)
-    ordered_date = models.DateTimeField()
+    ref_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="کد مرجوعی")
+    books = models.ManyToManyField(OrderBook, verbose_name="کتاب ها")
+    start_date = models.DateTimeField(auto_now_add=True, verbose_name="زمان شروع")
+    ordered_date = models.DateTimeField(verbose_name="زمان ثبت سفارش")
     ordered = models.BooleanField(default=False)
     shipping_address = models.ForeignKey(
-        Address, blank=True, null=True, related_name='shipping_addresses', on_delete=models.SET_NULL)
+        Address, blank=True, null=True, related_name='shipping_addresses', on_delete=models.SET_NULL,
+        verbose_name="آدرس محل ارسال")
     billing_address = models.ForeignKey(
-        Address, blank=True, null=True, related_name='billing_addresses', on_delete=models.SET_NULL)
+        Address, blank=True, null=True, related_name='billing_addresses', on_delete=models.SET_NULL,
+        verbose_name="آدرس صدور صورتحساب")
     payment = models.ForeignKey(
-        Payment, blank=True, null=True, on_delete=models.SET_NULL)
+        Payment, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="پرداخت")
     coupon = models.ForeignKey(
-        Coupon, blank=True, null=True, on_delete=models.SET_NULL)
-    being_delivered = models.BooleanField(default=False)
-    received = models.BooleanField(default=False)
-    refund_requested = models.BooleanField(default=False)
-    refund_granted = models.BooleanField(default=False)
+        Coupon, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="کوپن")
+    being_delivered = models.BooleanField(default=False, verbose_name="وضعیت سفارش")
+    received = models.BooleanField(default=False, verbose_name="وضعیت تحویل")
+    refund_requested = models.BooleanField(default=False, verbose_name="درخواست مرجوعی")
+    refund_granted = models.BooleanField(default=False, verbose_name="اعطا مرجوعی")
 
     def __str__(self):
         return self.user.username
@@ -231,21 +225,21 @@ class Order(models.Model):
 
 
 class message(models.Model):
-    name = models.CharField(max_length=30)
-    email = models.EmailField(max_length=40)
-    username = models.CharField(max_length=30)
-    password1 = models.CharField(max_length=40)
-    password2 = models.CharField(max_length=40)
+    name = models.CharField(max_length=30, verbose_name="نام")
+    email = models.EmailField(max_length=40, verbose_name="ایمیل")
+    username = models.CharField(max_length=30, verbose_name="نام کاربری")
+    password1 = models.CharField(max_length=40, verbose_name="رمز عبور")
+    password2 = models.CharField(max_length=40, verbose_name="تکرار رمز عبور")
 
-    contact = models.IntegerField(max_length=15)
-    message = models.CharField(max_length=1000, blank=True, null=True)
+    contact = models.IntegerField(max_length=15, verbose_name="تماس")
+    message = models.CharField(max_length=1000, blank=True, null=True, verbose_name="پیام")
 
 
 class Refund(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    reason = models.TextField()
-    accepted = models.BooleanField(default=False)
-    email = models.EmailField()
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="سفارش")
+    reason = models.TextField(verbose_name="دلیل")
+    accepted = models.BooleanField(default=False, verbose_name="")
+    email = models.EmailField(verbose_name="ایمیل")
 
     class Meta:
         verbose_name = "مرجوعی"
