@@ -19,7 +19,7 @@ from django.views.generic import ListView, DetailView, View
 from django.urls import reverse_lazy
 from core.forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 
-from core.models import Book, OrderBook, Order, Address, Payment, Coupon, Refund, UserProfile
+from core.models import Book, OrderBook, Order, Address, Payment, Coupon, Refund, UserProfile,Category
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -64,6 +64,22 @@ class UserDetail(RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsSuperUserOrStaffReadOnly,)
 
+
+
+class CategoryList(ListView):
+	# paginate_by = 5
+	# template_name = "category.html"
+
+	def get_queryset(self):
+		global category
+		slug = self.kwargs.get('slug')
+		category = get_object_or_404(Category.objects.active(), slug=slug)
+		return category.books.all()
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['category'] = category
+		return context
 
 
 

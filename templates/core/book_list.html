@@ -1,19 +1,22 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+
+{% block content %}
 {% load ratings %}
 
 <main>
   <div class="container">
-    <!--Navbar-->
+	{% comment %} <h3 class="alert alert-primary text-center">دسته‌بندی: {{category.title}}</h3> {% endcomment %}
+ <!--Navbar-->
     <nav
       class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5"
     >
-     
-      <!-- Collapsible content -->
+      <!-- Navbar brand -->
+      <span class="navbar-brand">دسته‌بندی: {{category.title}}</span>
+
     </nav>
     <!--/.Navbar-->
 
     
-
     
     <!--Section: Products v.3-->
     <section class="text-center mb-4">

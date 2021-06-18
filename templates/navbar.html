@@ -5,11 +5,30 @@
 >
   <div class="container" >
     <!-- Brand -->
-    <a class="navbar-brand waves-effect" href="/">
-      <strong class="blue-text">فروشگاه</strong>
+    <a style="font-size:25px;" class="navbar-brand waves-effect" href="/">
+      <strong class="blue-text"> فروشگاه &nbsp;&nbsp;</strong>
     </a>
+            {% for book in object_list %}
+                {% for cat in book.category.active %}
+                {% if cat.parent == None %}
+                <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
+                {% if cat.children.all %}
+                  {% include 'category_loop.html' %}
+                {% endif %}
+                {% endif %}
+              {% endfor %}
+    {% endfor %}
 
+    {% for cat in object.category.active %}
+                {% if cat.parent == None %}
+                <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
+                {% if cat.children.all %}
+                  {% include 'category_loop.html' %}
+                {% endif %}
+                {% endif %}
+    {% endfor %}
     <!-- Collapse -->
+    
     <button
       class="navbar-toggler"
       type="button"
@@ -26,29 +45,14 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- Left -->
       <ul class="navbar-nav mr-auto">
-        {% comment %}
-        <li class="nav-item active">
-          <a class="nav-link waves-effect" href="/"
-            >Home
-            <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link waves-effect" href="/checkout"> Checkout</a>
-        </li>
-        {% endcomment %}
+
       </ul>
 
       <!-- Right -->
-      <ul class="navbar-nav nav-flex-icons" style="color: black !important;">
+      <ul class="navbar-nav nav-flex-icons">
         {% if request.user.is_authenticated %}
         <li class="nav-item">
-          {% comment %}
-          <a
-            href="{% url 'core:order-summary' %}"
-            class="nav-link waves-effect"
-          >
-            {% endcomment %}
+
           <a class="nav-link waves-effect" href="{% url 'core:order-summary' %}">
             <span class="badge red z-depth-1 mr-1">{{ request.user|cart_book_count }}
             </span>

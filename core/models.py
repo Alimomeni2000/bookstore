@@ -28,7 +28,7 @@ ADDRESS_CHOICES = (
 
 class Category(models.Model):
     parent = models.ForeignKey(
-        'self', default=None, null=True, blank=True, on_delete=models.CASCADE)
+        'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children")
     title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
     slug = models.SlugField(max_length=200, verbose_name='آدرس دسته بندی')
     status = models.BooleanField(default=True, verbose_name='وضعیت')
@@ -42,6 +42,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی ها"
+        
 
     def __str__(self):
         return self.title
@@ -65,7 +66,7 @@ class Book(models.Model):
     title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
     price = models.FloatField(verbose_name="قیمت کتاب")
     discount_price = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
-    category = models.ManyToManyField(Category, verbose_name="دسته بندی")
+    category = models.ManyToManyField(Category,related_name="books", verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
     slug = models.SlugField(verbose_name="")
     description = models.TextField(verbose_name="توضیحات")

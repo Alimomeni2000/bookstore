@@ -5,11 +5,8 @@ spec:
   port: 80
   source:
     context: .
-    media_path: media
+    media_path: ''
     project_type: django
     python_version: '3.9'
     static_path: static
     wsgi: demo.wsgi
-  volume_mounts:
-  - mount_path: /usr/src/app/media
-    sub_path: papyrusbook/media
