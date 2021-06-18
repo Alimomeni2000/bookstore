@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
@@ -23,29 +24,61 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-7 col-lg-5">
+        {% if form.non_field_errors %}
+        <div class="errors">
+        {% for error in form.non_field_errors %} 
+        <p> {{error}}</p>
+        {% endfor %}
+        </div>
+        {% endif %}
                 <div class="login-wrap p-4 p-md-5">
                     <h1 style="text-align:center;">{% trans "Sign Up" %}</h1>
             <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
               {% csrf_token %}  
-                              {{ form|crispy }}
+                              <!-- {{ form|crispy }} -->
+                            <div class="error" style="font-size:12px !important" >
+                               {% if form.errors %}
+                                    {% for field in form %}
+                                        {% for error in field.errors %} 
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="filed" {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}>
+                                <label for="{{form.id_for_label }}" class="label">نام کاربری</label>
 
-              {% comment %} {{ form.username|as_crispy_field }}
-  
-              {{ form.email|as_crispy_field }}
+                                {{form.username}}
+                            </div>
+                                <div class="filed" {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}>
+                                    <label for="{{form.id_for_label }}" class="label">رایانامه</label>
+                                        {{form.email}}
 
-              {{ form.password1|as_crispy_field }}
-              {{ form.password2|as_crispy_field }} {% endcomment %}
-
+                                    <!-- <input type="email" name="email" placeholder="نشانی رایانامه" autocomplete="email" class="textinput textInput form-control" id="id_email"> -->
+                                </div>
+                                    <div class="filed" {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}>
+                                        <label for="{{form.id_for_label }}" class="label">گذرواژه</label>
+                                        {{form.password1}}
+                                    </div>
+                                        <div class="filed" {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }} >
+                                            <label for="{{form.id_for_label }}" class="label">تکرار گذرواژه</label>
+                                            <input type="password" name="password2" placeholder="تکرار گذرواژه" class="textinput textInput form-control"
+                                                required="" id="id_password2">
+                                        </div>
+                              <br>     
 
               {% if redirect_field_value %}
               <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
               {% endif %}
                   <div class="div-butt">
-
-              <button class='btn btn-primary butt' type="submit">{% trans "Sign Up" %} &raquo;</button>
-            </form>
+<br>
+              <button class='btn btn-primary butt' type="submit">{% trans "Sign Up" %} 	&larr;</button>
+            </form> 
                  </div>
-            <p>{% blocktrans %}حساب کاربری دارید ؟ <a href="{{ login_url }}">ورود</a>.{% endblocktrans %}</p>
+                 <br>
+            <p>{% blocktrans %}حساب کاربری دارید ؟ <a href="{{ login_url }}">وارد </a>شوید.{% endblocktrans %}</p>
                 </div>
             </div>
         </div>

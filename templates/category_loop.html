@@ -1,6 +1,0 @@
-{% for cat in cat.children.all %}
-                   <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp; </a>
-    {% if cat.children.all %}
-        {% include 'category_loop.html' %}
-    {% endif %}
-{% endfor %}

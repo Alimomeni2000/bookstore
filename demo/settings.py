@@ -3,9 +3,9 @@ from decouple import config
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-DEBUG = True
+DEBUG = False
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['papyrusbook-bookshoponline.fandogh.cloud']
 # TRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
 # STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
 STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')

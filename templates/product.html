@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %}
-{% load comment_tags %} 
+{% comment %} {% load comment_tags %} {% endcomment %}
 {% load ratings %}
 
 
@@ -49,9 +49,6 @@
                           <span    class="badge badge-pill danger-color"
                           >عدم موجودی</span>
                       {% endif %}</strong>
-          {% ratings object %}
-       بازدیدها:   {{object.hits.count}}
-
             </p>
               <br><br>
 
@@ -71,10 +68,10 @@
 
             <br>
             <br>
-                        {% comment %} <span>{% for cate in object.category.title   %}
-                        {{cate}}{% endfor %}</span> {% endcomment %}
-
-
+              دسته بندی ها :{% for cat in object.category.active %}
+                <a>{{cat.title}}</a>
+              {% endfor %}
+                        <br>
             <span> تعداد صفحه : {{ object.pages }}</span>
             <br>
             <span>سال انتشار : {{ object.year }}</span>
@@ -85,15 +82,11 @@
             <br>
             <span>ناشر :{{ object.publishers }}</span>
             <br>
-                            دسته بندی ها :           {% for cat in object.category.active %}
-                <a>{{cat.title}} , </a>
-              {% endfor %}
-                        <br>
 
           <p class="lead font-weight-bold">توضیحات</p>
 
           <p>{{ object.description }}</p>
-          
+
           {% comment %}
           <form class="d-flex justify-content-left">
             <!-- Default input -->
@@ -111,22 +104,19 @@
           </form>
           {% endcomment %}
         </div>
-    
+
         <!--Content-->
       </div>
       <!--Grid column-->
     </div>
-
-          {% render_comments object request %}
-          {% comment %} {% include_static_jquery %} {% endcomment %}
-          {% include_bootstrap %}
-
-
+{% comment %} {% ratings object %}
+        {% render_comments object request %}
+          {% include_bootstrap %} {% endcomment %}
     <!--Grid row-->
 
     <hr />
 
-    
+
       <!--Grid column-->
     </div>
     <!--Grid row-->

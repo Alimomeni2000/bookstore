@@ -1,4 +1,4 @@
-Django==3.2
+Django
 django-allauth
 markdown
 django-filter
@@ -13,7 +13,10 @@ django-allauth
 django-rest-auth
 dj-rest-auth
 django-decouple
-django-comments-dab-2.6.1
+django-comments-dab
 django-widget-tweaks
 django-bootstrap4
--e .
+django-star-ratings
+az-iranian-bank-gateways
+
+

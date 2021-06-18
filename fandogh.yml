@@ -1,5 +1,5 @@
 kind: ExternalService
-name: scusad
+name: papyrusbook
 spec:
   image_pull_policy: Always
   port: 80
@@ -7,9 +7,9 @@ spec:
     context: .
     media_path: media
     project_type: django
-    python_version: 3.8.5
+    python_version: '3.9'
     static_path: static
     wsgi: demo.wsgi
   volume_mounts:
   - mount_path: /usr/src/app/media
-    sub_path: bookstoreonline/media
+    sub_path: papyrusbook/media

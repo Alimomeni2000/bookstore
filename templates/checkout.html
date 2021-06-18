@@ -57,7 +57,7 @@
               {% if default_shipping_address %}
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
-                <label class="custom-control-label" for="use_default_shipping">از آدرس پیش فرض پستی من استفاده کنید : {{ default_shipping_address.street_address|truncatechars:10 }}</label>
+                <label class="custom-control-label" for="use_default_shipping">از آدرس صورت حساب من استفاده کنید : {{ default_shipping_address.street_address|truncatechars:10 }}</label>
               </div>
               {% endif %}
 
@@ -123,7 +123,9 @@
               </div>
 
               <hr class="mb-4">
-              <button class="btn btn-primary btn-lg btn-block" type="submit">نهایی کردن سفارش</button>
+              <button class="btn btn-primary btn-lg btn-block" type="submit"> <a href="{% url 'go_to_gateway/' %}"> نهایی کردن سفارش </a></button>
+
+              {% comment %} <button class="btn btn-primary btn-lg btn-block" type="submit">نهایی کردن سفارش</button> {% endcomment %}
 
             </form>
 

@@ -9,7 +9,12 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from comment.models import Comment
 
+class IPAddress(models.Model):
+    ip_address = models.GenericIPAddressField(verbose_name="آدرس آی پی")
 
+    def __str__(self):
+        return self.ip_address
+        
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
