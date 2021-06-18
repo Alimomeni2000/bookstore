@@ -14,7 +14,7 @@ class IPAddress(models.Model):
 
     def __str__(self):
         return self.ip_address
-        
+
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
@@ -64,7 +64,7 @@ class UserProfile(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
     price = models.FloatField(verbose_name="قیمت کتاب")
-    discount_price = models.FloatField(blank=True, null=True, verbose_name="تخفیف")
+    discount_price = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
     category = models.ManyToManyField(Category, verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
     slug = models.SlugField(verbose_name="")
@@ -79,7 +79,7 @@ class Book(models.Model):
     image = models.ImageField(blank=True, null=True, upload_to='book', verbose_name="تصویر")
     imageslide = models.ImageField(
         blank=True, null=True, upload_to='book', verbose_name="اسلاید تصویر")
-
+    hits= models.ManyToManyField(IPAddress,blank=True,related_name='hits',verbose_name='بازدیدها')
     class Meta:
         verbose_name = "کتاب"
         verbose_name_plural = "کتاب ها"
