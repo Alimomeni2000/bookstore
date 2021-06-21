@@ -1,0 +1,49 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+پروفایل{% endblock %} {% endblock %} 
+
+{% block main %}
+<div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title mb-0 float-left">پروفایل</h3>
+              </div>
+    <form method="POST" style="margin-left: 15px; margin-right: 15px;" enctype="multipart/form-data" action="{{ action_url }}">
+        {% csrf_token %}
+
+              <br>
+       
+
+     <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+       {{ form.username|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+       {{ form.email|as_crispy_field }}
+    </div>
+    </div>
+  <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+       {{ form.first_name|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+       {{ form.last_name|as_crispy_field }}
+    </div>
+    </div>
+    <br>
+        <button class="btn btn-success">ذخیره</button>
+         {% if request.resolver_match.kwargs.pk %}
+         <a href="{% url 'account:refund-delete' refund.pk %}" class="btn btn-danger">حذف</a>
+         {% endif %}
+        
+
+        <br>
+        <br>
+        <br>
+    </div>
+
+    </form>
+</div>
+{% endblock %}
+

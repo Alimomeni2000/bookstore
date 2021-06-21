@@ -1,0 +1,57 @@
+{% extends 'registration/base.html' %}
+{% block title %}لیست کاربران {% endblock %} 
+{% block main %}
+<div class="row">
+          <div class="col-12">
+            <div class="card">
+              
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>نام کاربری</th>
+                      <th>نام</th>
+                      <th>نام خانوادگی</th>
+                      <th>ایمیل</th>
+                      <th>شناسه مشتری</th>
+
+                      <th>خرید</th>
+                      
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                   {% for users in object_list %}
+                    <tr>
+                    
+
+                    <td> <a href="{% url 'account:user-update' user.pk %}">{{users.user.username}}</a></td>
+                    <td>{{users.user.first_name}}</td>
+                    <td>{{users.user.last_name}}</td>
+                    <td>{{users.user.email}}</td>
+                    {% if users.stripe_customer_id == None %}
+                    <td>-----</td>
+                    {% else %}
+                    <td>{{users.stripe_customer_id}}</td>
+
+                    {% endif %}
+                    {% if users.one_click_purchasing == True %}
+                    <td><i class="fa fa-check-circle" style="color:green"></i> </td>
+                    {% else %}
+                  <td> <i class="fa fa-check-circle" style="color:red"></i> </td>
+                    {% endif %}
+                    
+
+                    
+                    </tr>
+                   {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+{% endblock %}

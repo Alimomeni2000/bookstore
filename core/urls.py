@@ -9,7 +9,7 @@ from .views import (
     add_to_cart,
     remove_from_cart,
     remove_single_book_from_cart,
-    PaymentView,
+    # PaymentView,
     AddCouponView,
     RequestRefundView,
     CategoryList,
@@ -33,7 +33,7 @@ urlpatterns = [
     path('remove-from-cart/<slug>/', remove_from_cart, name='remove-from-cart'),
     path('remove-book-from-cart/<slug>/', remove_single_book_from_cart,
          name='remove-single-book-from-cart'),
-    path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
+    # path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
     # path('go_to_gateway/', go_to_gateway_view, name='go_to_gateway'),
 

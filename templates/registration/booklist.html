@@ -1,0 +1,66 @@
+{% extends 'registration/base.html' %}
+{% block title %}لیست کتاب ها{% endblock %} 
+{% block main %}
+<div class="row">
+          <div class="col-12">
+            <div class="card">
+              
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>عنوان</th>
+                      <th>آدرس</th>
+                      <th>قیمت</th>
+                      <th>توضیحات</th>
+                      <th>دسته بندی</th>
+
+                      <th>تعداد‌صفحه</th>
+                      <th>سال انتشار</th>
+                      <th>نویسنده</th>
+                      <th>مترجم</th>
+                      <th>ناشر</th>
+                      <th>وضعیت</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                   {% for book in object_list %}
+                    <tr>
+                    
+
+                    <td><a href="{% url 'account:book-update' book.pk  %}">{{book.title}}</a></td>
+                    <td>{{book.slug}}</td>
+                    <td>{{book.price}}</td>
+                    <td>{{book.description|slice:":50" }}</td>
+                    <td>{{book.category_to_str}}</td>
+                    <td>{{book.pages}}</td>
+                    <td>{{book.year}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.translator}}</td>
+                    <td>{{book.publishers}}</td>
+
+                    <td>{% if book.status == True %}
+                            <span class="badge badge-success">موجود</span>
+                            <a target="_blank" class="badge badge-primary" href="{{ book.get_absolute_url }}">نمایش درسایت</a>
+                    {% else %}
+                            <span class="badge badge-danger">عدم موجودی</span>
+
+                    {% endif %}
+                    {% if user.is_superuser %}
+                            <a class="badge text-danger "  href="{% url 'account:book-delete' book.pk %}">حذف</a>
+
+                    {% endif %}
+                    </td>
+                    </tr>
+                   {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}افزودن کتاب{% endblock %} {% endblock %}
+{% block main %}
+<div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title mb-0 float-right">افزدون کتاب</h3>
+              </div>
+    <form method="POST" style="margin-left: 15px; margin-right: 15px;" enctype="multipart/form-data" action="{{ action_url }}">
+        {% csrf_token %}
+    {% comment %} {{ form|crispy }} {% endcomment %}
+              <br>
+
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.title|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.slug|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.price|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.discount_price|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.pages|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.year|as_crispy_field }}
+      </div>
+    </div>
+       <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.author|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.translator|as_crispy_field }}
+      </div>
+    </div>
+      <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.publishers|as_crispy_field }}
+      </div>
+
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-12 mb-0">
+        {{ form.description|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0" >
+
+    <div id="div_id_status" class="form-check">
+                    <input type="checkbox" name="status" class="checkboxinput form-check-input" id="id_status" checked="">
+                <label for="id_status" style="margin-right:20px;" class="form-check-label">
+                    وضعیت
+                </label>      
+        </div>     
+    </div>
+        <div class="form-group col-md-6 mb-0">
+
+
+            <div id="div_id_special_offer" class="form-check">
+                    <input type="checkbox" name="special_offer" class="checkboxinput form-check-input" id="id_special_offer">
+                
+                <label for="id_special_offer" style="margin-right:20px;" class="form-check-label">
+                    پیشنهاد ویژه
+                </label>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="form-row">
+
+        <div class="form-group col-md-6 mb-0">
+        {{ form.category|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.image|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.imageslide|as_crispy_field }}
+      </div>
+    </div>
+    <br>
+        <button class="btn btn-success">ذخیره</button>
+         {% if request.resolver_match.kwargs.pk %}
+         <a href="{% url 'account:book-delete' book.pk %}" class="btn btn-danger">حذف</a>
+         {% endif %}
+        
+
+        <br>
+        <br>
+        <br>
+
+    </form>
+</div>
+{% endblock %}
+

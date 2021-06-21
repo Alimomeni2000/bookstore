@@ -36,41 +36,46 @@
                 <strong>
                   <a href="{{ book.get_absolute_url }}" class="dark-grey-text"
                     >{{ book.title }}
-                    {% if book.special_offer %}
+                    {% if book.special_offer and book.discount %}
                     <span
                 
                       class="badge badge-pill danger-color"
-                      >پیشنهاد ویژه</span
-                    >
+                      >پیشنهاد ویژه</span>
                       {% endif %}
                       
 
 
                       </strong>
               </h5>
-                  </a>
 <br>
                      {% ratings book %}
               <h4 class="font-weight-bold blue-text">
                 <strong>
-                  {% if book.discount_price %} {{ book.discount_price }}  تومان
-                     {% else %} {{ book.price }} تومان{% endif %}
+                 {% if book.discount %}
+            <span class="mr-1">
+              <del>{{ book.price }} </del>
+            </span>
+            <span>{{ book.discount }} تومان</span>
+            {% else %}
+            <span>{{ book.price }} تومان</span>
+            {% endif %}
                 </strong>
+              
                 <br>
                 <br>
                 <strong> {% if book.status %}
-                      <span    class="badge badge-pill success-color"
-                          >موجود</span>
+                      <span class="badge badge-pill success-color">موجود</span>
                           {% else %}
-                          <span    class="badge badge-pill danger-color"
-                          >عدم موجودی</span>
+                          <span class="badge badge-pill danger-color">عدم موجودی</span>
                       {% endif %}</strong>
               </h4>
             </div>
+
           </div>
         </div>
         {% endfor %}
       </div>
+                  </a>
     </section>
     <!--Section: Products v.3-->
 

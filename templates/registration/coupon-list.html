@@ -1,0 +1,33 @@
+{% extends 'registration/base.html' %}
+{% block title %}لیست کوپن ها{% endblock %} 
+{% block main %}
+<div class="row">
+          <div class="col-12">
+            <div class="card">
+              
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>عنوان</th>
+                      <th>آدرس</th>
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                   {% for coupon in object_list %}
+                    <tr>
+                    
+                  <td><a href="{% url 'account:coupon-update' coupon.pk  %}">
+                    {{coupon.code}}</td>
+                    <td>{{coupon.amount}}</td>
+
+                {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}

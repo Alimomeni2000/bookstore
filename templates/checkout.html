@@ -26,16 +26,34 @@
                   <label for="shipping_address2" class=""></label>
                 </div>
 
+
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <label for="shipping_state">استان*</label>
+                    <input type='text' placeholder='استان' id='shipping_state' name='shipping_state' class='form-control' />
+                    <div class="invalid-feedback">
+استان محل زندگی خود را وارد کنید. 
+   </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <label for="shipping_city">شهر*</label>
+                    <input type='text' placeholder='شهر' id='shipping_city' name='shipping_city' class='form-control' />
+                    <div class="invalid-feedback">
+شهر محل سکونت خود را وارد کنید   </div>
+                  </div>
+                </div>
+
+
                 <div class="row">
                   <div class="col-lg-4 col-md-12 mb-4">
-                    <label for="country">کشور</label>
+                    <label for="country">کشور*</label>
                     {{ form.shipping_country }}
                     <div class="invalid-feedback">
                   لطفاً یک کشور معتبر انتخاب کنید.
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 mb-4">
-                    <label for="shipping_zip">کد پستی</label>
+                    <label for="shipping_zip">کد پستی*</label>
                     <input type='text' placeholder='کد پستی بدون خط فاصله ' id='shipping_zip' name='shipping_zip' class='form-control' />
                     <div class="invalid-feedback">
                   کد پستی لازم است           
@@ -77,8 +95,23 @@
                 </div>
 
                 <div class="row">
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <label for="billing_state">استان*</label>
+                    <input type='text' placeholder='استان' id='billing_state' name='billing_state' class='form-control' />
+                    <div class="invalid-feedback">
+استان محل زندگی خود را وارد کنید. 
+   </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <label for="billing_city">شهر*</label>
+                    <input type='text' placeholder='شهر' id='billing_city' name='billing_city' class='form-control' />
+                    <div class="invalid-feedback">
+شهر محل سکونت خود را وارد کنید   </div>
+                  </div>
+                </div>
+                <div class="row">
                   <div class="col-lg-4 col-md-12 mb-4">
-                    <label for="country">کشور</label>
+                    <label for="country">کشور*</label>
                     {{ form.billing_country }}
                     <div class="invalid-feedback">
                   لطفاً یک کشور معتبر انتخاب کنید.
@@ -86,7 +119,7 @@
                   </div>
 
                   <div class="col-lg-4 col-md-6 mb-4">
-                    <label for="billing_zip">کد پستی</label>
+                    <label for="billing_zip">کد پستی*</label>
                     <input type='text' placeholder='کدپستی بدون خط فاصله' id='billing_zip' name='billing_zip' class='form-control' />
                     <div class="invalid-feedback">
                   کد پستی لازم است           
@@ -111,8 +144,8 @@
               {% endif %}
               <hr>
 
-              <h3> پرداخت</h3>
-
+              {% comment %} <h3> پرداخت</h3> {% endcomment %}
+{% comment %} 
               <div class="d-block my-3">
                 {% for value, name in form.fields.payment_option.choices %}
                 <div class="custom-control custom-radio">
@@ -120,11 +153,10 @@
                   <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
                 </div>
                 {% endfor %}
-              </div>
+              </div> {% endcomment %}
 
               <hr class="mb-4">
-              <button class="btn btn-primary btn-lg btn-block" type="submit">نهایی کردن سفارش</button>
-
+         <a  href="{% url 'go_to_gateway' %}" class="btn btn-primary btn-lg btn-block a_link" target="_blank">پرداخت</a>
             </form>
 
           </div>

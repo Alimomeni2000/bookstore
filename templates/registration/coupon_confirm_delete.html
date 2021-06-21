@@ -1,0 +1,22 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}حذف کوپن{% endblock %} {% endblock %}
+{% block main %}
+<div class="card card-danger text-center mx-auto">
+              <div class="card-header text-center">
+                <h3 class="card-title mb-0 float-right ">حذف کوپن</h3>
+              </div>
+    <form method="post">
+    {% csrf_token %}
+    <br>
+
+    <p>آیا از حذف کوپن {{object.code}} مطمئن هستید؟</p>
+    <input type="submit" class="btn btn-danger" value="حذف">
+    <br>
+    <br>
+    </form>
+
+</div>
+{% endblock %}
+

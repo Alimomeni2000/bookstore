@@ -16,7 +16,6 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView, View
-from django.urls import reverse_lazy
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 
 from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile,Category
@@ -574,11 +573,111 @@ class PaymentView(View):
         messages.warning(self.request, "اطلاعات نامعتبر دریافت شد.")
         return redirect("/payment/stripe/")
 
+from django.urls import reverse
+from azbankgateways import bankfactories, models as bank_models, default_settings as settings
+
+import logging
+
+from django.http import HttpResponse, Http404
+from django.urls import reverse
+
+from azbankgateways import bankfactories, models as bank_models, default_settings as settings
+
+
+
+class go_to_gateway_view(View):
+    # خواندن مبلغ از هر جایی که مد نظر است
+    def get(self, request, *args, **kwargs):
+
+        order=Order.objects.get(user=request.user, ordered=False)
+
+   
+        amount = int(order.get_total() * 10000)
+    # خواندن مبلغ از هر جایی که مد نظر است
+    # amount = order
+    # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
+        user_mobile_number = '+989112221234'  # اختیاری
+
+        factory = bankfactories.BankFactory()
+        bank = factory.create() # or factory.create(bank_models.BankType.BMI) or set identifier
+        bank.set_request(request)
+        bank.set_amount(amount)
+        # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
+        bank.set_client_callback_url(reverse('callback-gateway'))
+        bank.set_mobile_number(user_mobile_number)  # اختیاری
+
+        # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
+        # پرداخت برقرار کنید. 
+        bank_record = bank.ready()
+    
+        bank.ready()
+    
+    # هدایت کاربر به درگاه بانک
+        return bank.redirect_gateway()
+
+
+
+class callback_gateway_view(View):
+    def get(self, request):
+       
+        tracking_code = request.GET.get(settings.TRACKING_CODE_QUERY_PARAM, None)
+        if not tracking_code:
+            logging.debug("این لینک معتبر نیست.")
+            raise Http404
+
+        try:
+            bank_record = bank_models.Bank.objects.get(tracking_code=tracking_code)
+        except bank_models.Bank.DoesNotExist:
+        # logging.debug("این لینک معتبر نیست.")
+            raise Http404
+
+    # در این قسمت باید از طریق داده هایی که در بانک رکورد وجود دارد، رکورد متناظر یا هر اقدام مقتضی دیگر را انجام دهیم
+        if bank_record.is_success:
+# from django.urls import reverse_lazy
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            form = PaymentForm(request.POST)
+            userprofile = UserProfile.objects.get(user=self.request.user)
+    # amount = int(order.get_total() * 100)
+            payment = Payment()
+            payment.user = self.request.user
+            payment.amount = order.get_total()
+            payment.save()
+            order_books = order.books.all()
+            order_books.update(ordered=True)
+            for book in order_books:
+                book.save()
+  
+            order.ordered = True
+            order.payment = payment
+            order.ref_code = create_ref_code()
+            order.save()
+            # success_url= reverse_lazy('account:profile')
+
+        # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
+        # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
+            messages.warning(
+                    self.request, "سفارش شما با موفقیت ثبت شد . شما میتوانید جزئیات  سفارش خود را در پروفایل کاربری مشاهده کنید")
+            return redirect("account/")
+    # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
+        # return HttpResponse("پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.")
+        messages.warning(
+                    self.request, "پرداخت با شکست مواجه شد . اگر از حساب شما پولی کسر شده است ،‌  ظرف مدت ۴۸ ساعت پول به حساب شما واریز خواهد شد.")
+        return redirect("/")
+
+
+
+
+
+
 
 # def go_to_gateway_view(request):
 
+#     # order=Order.objects.get(user=request.user, ordered=False)
+
+   
+#     # amount = int(order.get_total() * 100)
 #     # خواندن مبلغ از هر جایی که مد نظر است
-#     amount = 60000
+#     amount = 600000
 #     # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
 #     user_mobile_number = '+989112221234'  # اختیاری
 
@@ -587,11 +686,53 @@ class PaymentView(View):
 #     bank.set_request(request)
 #     bank.set_amount(amount)
 #     # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
-#     bank.set_client_callback_url('/callback-geteway')
+#     bank.set_client_callback_url(reverse('callback-gateway'))
+
 #     bank.set_mobile_number(user_mobile_number)  # اختیاری
 
 #     # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
 #     # پرداخت برقرار کنید.
 #     bank.ready()
+#     bank_record = bank.ready()
 #     # هدایت کاربر به درگاه بانک
 #     return bank.redirect_gateway()
+
+
+
+# def callback_gateway_view(request):
+#     # order = Order.objects.get(user=request.user, ordered=False)
+#     # form = PaymentForm(request.POST)
+#     # userprofile = UserProfile.objects.get(user=request.user)
+#     # # amount = int(order.get_total() * 100)
+#     # payment = Payment()
+#     # payment.user = request.user
+#     # payment.amount = order.get_total()
+#     # payment.save()
+#     # order_books = order.books.all()
+#     # order_books.update(ordered=True)
+#     # for book in order_books:
+#     #     book.save()
+
+#     # order.ordered = True
+#     # order.payment = payment
+#     # order.ref_code = create_ref_code()
+#     # order.save()
+#     tracking_code = request.GET.get('tc', None)
+#     if not tracking_code:
+#         logging.debug("این لینک معتبر نیست.")
+#         raise Http404
+
+#     try:
+#         bank_record = bank_models.Bank.objects.get(tracking_code=tracking_code)
+#     except bank_models.Bank.DoesNotExist:
+#         logging.debug("این لینک معتبر نیست.")
+#         raise Http404
+
+#     # در این قسمت باید از طریق داده هایی که در بانک رکورد وجود دارد، رکورد متناظر یا هر اقدام مقتضی دیگر را انجام دهیم
+#     if bank_record.is_success:
+#         # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
+#         # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
+#         return HttpResponse("پرداخت با موفقیت انجام شد.")
+
+#     # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
+#     return HttpResponse("پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.")

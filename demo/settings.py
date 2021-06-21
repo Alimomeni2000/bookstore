@@ -1,6 +1,5 @@
 import os
 from decouple import config
-
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = True
@@ -8,11 +7,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ALLOWED_HOSTS = ['papyrusbook-bookshoponline.fandogh.cloud']
 ALLOWED_HOSTS = []
 
-# TRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
-# STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
-STRIPE_PUBLIC_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
-STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
-LOGIN_REDIRECT_URL = "core:home"
+
+# STRIPE_PUBLIC_KEY = config('STRIPE_TEST_SECRET_KEY')
+# STRIPE_SECRET_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
+# STRIPE_PUBLIC_KEY = config('STRRIPE_TEST_PUBLIC_KEY')
+# STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
+LOGIN_REDIRECT_URL = "account:profile"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
 
@@ -41,11 +41,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrap4',
 
-
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
-    'accounts.apps.AccountsConfig',
-
+    # 'account',
 
 
 
@@ -74,7 +72,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'demo.urls'
 CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+# AUTH_USER_MODEL= 'account.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -159,7 +157,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AZ_IRANIAN_BANK_GATEWAYS = {
     'GATEWAYS': {
         'IDPAY': {
-            'MERCHANT_CODE': 'dd',
+            'MERCHANT_CODE': 'fba1d424-acfe-4499-a0e6-fa9ed24d353a ',
             'METHOD': 'POST',
             'X_SANDBOX': 1,
         },

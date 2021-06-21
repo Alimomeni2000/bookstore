@@ -6,8 +6,10 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django.contrib.contenttypes.fields import GenericRelation
-
+from extensions.utils import jalali_converter
 from comment.models import Comment
+# Create your models here.
+
 
 class IPAddress(models.Model):
     ip_address = models.GenericIPAddressField(verbose_name="آدرس آی پی")
@@ -28,7 +30,7 @@ ADDRESS_CHOICES = (
 
 class Category(models.Model):
     parent = models.ForeignKey(
-        'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children")
+        'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children",verbose_name="زیر دسته")
     title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
     slug = models.SlugField(max_length=200, verbose_name='آدرس دسته بندی')
     status = models.BooleanField(default=True, verbose_name='وضعیت')
@@ -38,6 +40,8 @@ class Category(models.Model):
         blank=True, null=True, upload_to='category', verbose_name='آیکون')
 
     objects = CategoryManager()
+    def get_absolute_url(self):
+        return reverse("account:category-list")
 
     class Meta:
         verbose_name = "دسته‌بندی"
@@ -51,9 +55,10 @@ class Category(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="نوار شناسه مشتری")
-    one_click_purchasing = models.BooleanField(default=False, verbose_name="خرید با یک کلیک")
-
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="شناسه مشتری")
+    one_click_purchasing = models.BooleanField(default=False, verbose_name="خرید")
+    def get_absolute_url(self):
+        return reverse("account:user-list")
     class Meta:
         verbose_name = "پروفایل کاربر"
         verbose_name_plural = "پروفایل کاربران"
@@ -65,10 +70,10 @@ class UserProfile(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
     price = models.FloatField(verbose_name="قیمت کتاب")
-    discount_price = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
+    discount = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
     category = models.ManyToManyField(Category,related_name="books", verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
-    slug = models.SlugField(verbose_name="")
+    slug = models.SlugField(verbose_name="آدرس")
     description = models.TextField(verbose_name="توضیحات")
     pages = models.IntegerField(blank=True, null=True, verbose_name="تعداد صفحات")
     year = models.IntegerField(blank=True, null=False, verbose_name="سال انتشار")
@@ -88,6 +93,7 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+
     def get_absolute_url(self):
         return reverse("core:product", kwargs={
             'pk': self.pk
@@ -102,7 +108,9 @@ class Book(models.Model):
         return reverse("core:remove-from-cart", kwargs={
             'slug': self.slug
         })
-
+    def category_to_str(self):
+        return "، ".join([category.title for category in self.category.active()])
+    category_to_str.short_description = "دسته‌بندی"
 
 class SlidShow(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE, verbose_name="نام کتاب")
@@ -125,8 +133,8 @@ class OrderBook(models.Model):
     quantity = models.IntegerField(default=1, verbose_name="تعداد")
 
     class Meta:
-        verbose_name = "سفارش کتاب"
-        verbose_name_plural = "سفارشات کتاب"
+        verbose_name = "سفارش"
+        verbose_name_plural = "سفارشات"
 
     def __str__(self):
         return f"{self.quantity} of {self.book.title}"
@@ -149,10 +157,13 @@ class OrderBook(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=250, choices=ADDRESS_CHOICES, verbose_name="آدرس خیابان")
+    street_address = models.CharField(max_length=250, verbose_name="آدرس خیابان")
+    city = models.CharField(max_length=250, verbose_name="شهر")
+    state = models.CharField(max_length=250 ,verbose_name="استان")
+
     apartment_address = models.CharField(max_length=250, verbose_name="آدرس آپارتمان")
     country = CountryField(verbose_name="کشور")
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES, verbose_name="")
+    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES, verbose_name="انتخاب آدرس")
     zip_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="کد پستی")
     default = models.BooleanField(default=False, verbose_name="پیشفرض")
 
@@ -167,7 +178,7 @@ class Address(models.Model):
 class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE, blank=True, null=True)
-    strip_charge_id = models.CharField(max_length=50, verbose_name="شناسه نوار هزینه")
+    strip_charge_id = models.CharField(max_length=50, verbose_name="شناسه پرداخت")
     amount = models.FloatField(verbose_name="جمع کل خرید")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="زمان")
 
@@ -182,7 +193,12 @@ class Payment(models.Model):
 class Coupon(models.Model):
     code = models.CharField(max_length=20, verbose_name="کد کوپن")
     amount = models.FloatField(verbose_name="مقدار")
-
+    def get_absolute_url(self):
+        return reverse("account:coupon-list")
+    # def get_absolute_url(self):
+    #     return reverse("account:coupon-delete", kwargs={
+    #         'pk': self.pk
+    #     })
     def __str__(self):
         return self.code
 
@@ -213,13 +229,21 @@ class Order(models.Model):
     received = models.BooleanField(default=False, verbose_name="وضعیت تحویل")
     refund_requested = models.BooleanField(default=False, verbose_name="درخواست مرجوعی")
     refund_granted = models.BooleanField(default=False, verbose_name="اعطا مرجوعی")
-
+    def jorderd_date(self):
+        return jalali_converter(self.ordered_date)
+    jorderd_date.short_description = "زمان ثبت سفارش"
+    def cat(self):
+        return "، ".join([billing_address.satate for billing_address in self.billing_address.all()])
+    cat.short_description = "dddd"
+    def cate(self):
+        return ([shipping_address for shipping_address in self.shipping_address.state()])
+    cate.short_description = "eeee"
     def __str__(self):
         return self.user.username
 
     class Meta:
-        verbose_name = "سفارش"
-        verbose_name_plural = "سفارشات"
+        verbose_name = "سفارشات ثبت شده"
+        verbose_name_plural = "سفارشات ثبت شده"
 
     def get_total(self):
         total = 0
@@ -243,10 +267,11 @@ class message(models.Model):
 
 class Refund(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="سفارش")
-    reason = models.TextField(verbose_name="دلیل")
-    accepted = models.BooleanField(default=False, verbose_name="")
+    reason = models.TextField(verbose_name="توضیحات")
+    accepted = models.BooleanField(default=False, verbose_name="وضعیت")
     email = models.EmailField(verbose_name="ایمیل")
-
+    def get_absolute_url(self):
+        return reverse("account:refund-list")
     class Meta:
         verbose_name = "مرجوعی"
         verbose_name_plural = "مرجوعی ها"

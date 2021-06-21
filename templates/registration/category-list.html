@@ -1,0 +1,43 @@
+{% extends 'registration/base.html' %}
+{% block title %}لیست دسته بندی ها{% endblock %} 
+{% block main %}
+<div class="row">
+          <div class="col-12">
+            <div class="card">
+              
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>عنوان</th>
+                      <th>زیر‌‌ دسته</th>
+                     <th>وضعیت</th>
+                      <th>آیکون</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                   {% for category in object_list %}
+                    <tr>
+                    
+                  <td><a href="{% url 'account:category-update' category.pk  %}">{{category.title}}</a></td>
+                    {% if category.parent == None %}
+                    <td>--------</td>
+                    {% else %}
+                    <td><a href="{% url 'account:category-update' category.pk  %}">{{category.parent}}</a></td>
+
+                    {% endif %}
+                    {% if category.status == True %}
+                    <td><i class="fa fa-check-circle" style="color:green"></i> </td>
+                    {% else %}
+                   <td><i class="fa fa-check-circle" style="color:red"></i> </td>
+                    {% endif %}
+                    <td><img src="{{category.icon.url}}" style="border-radius:10px;" width="100"></td>
+                {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}

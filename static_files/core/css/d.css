@@ -25,3 +25,12 @@
     margin-top: 17px !important;
     margin-right: 40px !important;
 }
+
+.a_link {
+  color:#ffffff;
+  background-color: #EEEEEE;
+  padding: 10px 6px 10px 6px;border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}

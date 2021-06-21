@@ -8,6 +8,8 @@
     <a style="font-size:25px;" class="navbar-brand waves-effect" href="/">
       <strong class="blue-text"> فروشگاه &nbsp;&nbsp;</strong>
     </a>
+
+    
             {% for book in object_list %}
                 {% for cat in book.category.active %}
                 {% if cat.parent == None %}
@@ -61,6 +63,13 @@
             <span class="clearfix d-none d-sm-inline-block">     سبد خرید </span>
           </a>
         </li>
+           <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account:profile' %}">
+            <i class="fa fa-user"></i>
+
+            <span class="clearfix d-none d-sm-inline-block ">حساب کاربری</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link waves-effect" href="{% url 'account_logout' %}">
             <span class="clearfix d-none d-sm-inline-block"> خروج  </span>
@@ -72,6 +81,10 @@
             <span class="clearfix d-none d-sm-inline-block"> ورود   </span>
           </a>
         </li>
+
+
+        	
+
         <li class="nav-item">
           <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
             <span class="clearfix d-none d-sm-inline-block"> ثبت نام </span>
