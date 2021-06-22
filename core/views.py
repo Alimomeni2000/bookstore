@@ -2,6 +2,15 @@ from django.urls import reverse
 from azbankgateways import bankfactories, default_settings as settings
 import random
 import string
+from django.urls import reverse
+from azbankgateways import bankfactories, models as bank_models, default_settings as settings
+
+import logging
+
+from django.http import HttpResponse, Http404
+from django.urls import reverse
+
+from azbankgateways import bankfactories, models as bank_models, default_settings as settings
 
 from django.urls.base import reverse_lazy
 
@@ -328,12 +337,18 @@ class CheckoutView(View):
                         'shipping_address2')
                     shipping_country = form.cleaned_data.get(
                         'shipping_country')
+                    shipping_city = form.cleaned_data.get(
+                        'shipping_city')
+                    shipping_state = form.cleaned_data.get(
+                        'shipping_state')
                     shipping_zip = form.cleaned_data.get('shipping_zip')
 
-                    if is_valid_form([shipping_address1, shipping_country, shipping_zip]):
+                    if is_valid_form([shipping_address1,shipping_city,shipping_state ,shipping_country, shipping_zip]):
                         shipping_address = Address(
                             user=self.request.user,
                             street_address=shipping_address1,
+                            city=shipping_city,
+                            state=shipping_state,
                             apartment_address=shipping_address2,
                             country=shipping_country,
                             zip_code=shipping_zip,
@@ -389,12 +404,18 @@ class CheckoutView(View):
                         'billing_address2')
                     billing_country = form.cleaned_data.get(
                         'billing_country')
+                    billing_state = form.cleaned_data.get(
+                        'billing_state')
+                    billing_city = form.cleaned_data.get(
+                        'billing_city')
                     billing_zip = form.cleaned_data.get('billing_zip')
 
-                    if is_valid_form([billing_address1, billing_country, billing_zip]):
+                    if is_valid_form([billing_address1, billing_state,billing_city,billing_country, billing_zip]):
                         billing_address = Address(
                             user=self.request.user,
                             street_address=billing_address1,
+                            city=billing_city,
+                            state=billing_state,
                             apartment_address=billing_address2,
                             country=billing_country,
                             zip_code=billing_zip,
@@ -418,9 +439,9 @@ class CheckoutView(View):
                 payment_option = form.cleaned_data.get('payment_option')
 
                 if payment_option == 'S':
-                    return redirect('core:payment', payment_option='paypal')
+                    return redirect('go_to_gateway')
                 elif payment_option == 'P':
-                    return redirect('core:payment', payment_option='paypal')
+                    return redirect('go_to_gateway')
                 else:
                     messages.warning(
                         self.request, "گزینه پرداخت را انتخاب کنید. ")
@@ -573,17 +594,6 @@ class PaymentView(View):
         messages.warning(self.request, "اطلاعات نامعتبر دریافت شد.")
         return redirect("/payment/stripe/")
 
-from django.urls import reverse
-from azbankgateways import bankfactories, models as bank_models, default_settings as settings
-
-import logging
-
-from django.http import HttpResponse, Http404
-from django.urls import reverse
-
-from azbankgateways import bankfactories, models as bank_models, default_settings as settings
-
-
 
 class go_to_gateway_view(View):
     # خواندن مبلغ از هر جایی که مد نظر است
@@ -592,7 +602,7 @@ class go_to_gateway_view(View):
         order=Order.objects.get(user=request.user, ordered=False)
 
    
-        amount = int(order.get_total() * 10000)
+        # amount = int(order.get_total())
     # خواندن مبلغ از هر جایی که مد نظر است
     # amount = order
     # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
@@ -601,7 +611,7 @@ class go_to_gateway_view(View):
         factory = bankfactories.BankFactory()
         bank = factory.create() # or factory.create(bank_models.BankType.BMI) or set identifier
         bank.set_request(request)
-        bank.set_amount(amount)
+        bank.set_amount(200000)
         # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
         bank.set_client_callback_url(reverse('callback-gateway'))
         bank.set_mobile_number(user_mobile_number)  # اختیاری
@@ -620,7 +630,7 @@ class go_to_gateway_view(View):
 class callback_gateway_view(View):
     def get(self, request):
        
-        tracking_code = request.GET.get(settings.TRACKING_CODE_QUERY_PARAM, None)
+        tracking_code = request.GET.get('tc', None)
         if not tracking_code:
             logging.debug("این لینک معتبر نیست.")
             raise Http404
@@ -657,7 +667,7 @@ class callback_gateway_view(View):
         # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
             messages.warning(
                     self.request, "سفارش شما با موفقیت ثبت شد . شما میتوانید جزئیات  سفارش خود را در پروفایل کاربری مشاهده کنید")
-            return redirect("account/")
+            return redirect("/")
     # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
         # return HttpResponse("پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.")
         messages.warning(

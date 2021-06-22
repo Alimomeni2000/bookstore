@@ -28,6 +28,15 @@ ADDRESS_CHOICES = (
 )
 
 
+BEING_DELIVERED = (
+    ('S', 'در صف بررسی'),
+    ('C', 'تایید سفارش'),
+    ('P', 'آماده سازی سفارش'),
+    ('p', 'بسته بندی'),
+    ('D', 'تحویل به پست'),
+    ('c', 'تحویل مشتری'),
+)
+
 class Category(models.Model):
     parent = models.ForeignKey(
         'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children",verbose_name="زیر دسته")
@@ -70,7 +79,7 @@ class UserProfile(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
     price = models.FloatField(verbose_name="قیمت کتاب")
-    discount = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
+    discount_percent = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
     category = models.ManyToManyField(Category,related_name="books", verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
     slug = models.SlugField(verbose_name="آدرس")
@@ -112,6 +121,18 @@ class Book(models.Model):
         return "، ".join([category.title for category in self.category.active()])
     category_to_str.short_description = "دسته‌بندی"
 
+    def value_discount(self):
+        if self.discount_percent != 0:
+            num= self.discount_percent
+            return num
+
+    value_discount.short_description = "درصد تخفیف"
+    
+    def discount_price(self):
+        if self.value_discount == 0:
+            return self.price
+        else:
+            return self.price-(self.price*self.discount_percent/100)
 class SlidShow(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE, verbose_name="نام کتاب")
     status = models.BooleanField(default=False, verbose_name="وضعیت")
@@ -143,13 +164,13 @@ class OrderBook(models.Model):
         return self.quantity * self.book.price
 
     def get_total_discount_book_price(self):
-        return self.quantity * self.book.discount_price
+        return self.quantity * self.book.discount_price()
 
     def get_amount_saved(self):
         return self.get_total_book_price() - self.get_total_discount_book_price()
 
     def get_final_price(self):
-        if self.book.discount_price:
+        if self.book.discount_price():
             return self.get_total_discount_book_price()
         return self.get_total_book_price()
 
@@ -225,19 +246,15 @@ class Order(models.Model):
         Payment, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="پرداخت")
     coupon = models.ForeignKey(
         Coupon, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="کوپن")
-    being_delivered = models.BooleanField(default=False, verbose_name="وضعیت سفارش")
+    being_delivered = models.CharField(max_length=1,choices=BEING_DELIVERED,default='S', verbose_name="وضعیت سفارش")
     received = models.BooleanField(default=False, verbose_name="وضعیت تحویل")
     refund_requested = models.BooleanField(default=False, verbose_name="درخواست مرجوعی")
     refund_granted = models.BooleanField(default=False, verbose_name="اعطا مرجوعی")
     def jorderd_date(self):
         return jalali_converter(self.ordered_date)
     jorderd_date.short_description = "زمان ثبت سفارش"
-    def cat(self):
-        return "، ".join([billing_address.satate for billing_address in self.billing_address.all()])
-    cat.short_description = "dddd"
-    def cate(self):
-        return ([shipping_address for shipping_address in self.shipping_address.state()])
-    cate.short_description = "eeee"
+    def get_absolute_url(self):
+        return reverse("account:order-list")
     def __str__(self):
         return self.user.username
 
@@ -253,7 +270,11 @@ class Order(models.Model):
             total -= self.coupon.amount
         return total
 
-
+    def books_to_list(self):
+        return (books.book for books in self.books.all())
+    books_to_list.short_description = "لیست کتاب ها"
+    # def get_absolute_url(self):
+    #     return reverse("account:order-list")
 class message(models.Model):
     name = models.CharField(max_length=30, verbose_name="نام")
     email = models.EmailField(max_length=40, verbose_name="ایمیل")

@@ -37,10 +37,9 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'comment',
     'star_ratings',
-    'azbankgateways',
     'widget_tweaks',
     'bootstrap4',
-
+    'azbankgateways',
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
     # 'account',
@@ -171,7 +170,6 @@ AZ_IRANIAN_BANK_GATEWAYS = {
     'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader',
     'BANK_PRIORITIES': [
         'IDPAY',
-        'SEP',
         # and so on ...
     ],
 }

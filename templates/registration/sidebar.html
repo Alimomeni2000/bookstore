@@ -84,14 +84,14 @@
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                سفارشات ثبت شده 
-                <i class="right fas fa-angle-left"></i>
+                سفارشات
+                                <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
  
-                {% link request 'order-list' 'لیست سفارشات ثبت شده ' %}
+                {% link request 'order-list' 'پیگیری سفارش' %}
 
               </li>
 
@@ -162,18 +162,37 @@
            <li class="nav-item has-treeview  {% if request.resolver_match.url_name == link_name %} menu-open {% endif %}">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
+             <p>
+                سفارشات
+                                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+ 
+                {% link request 'order-list' 'پیگیری سفارش' %}
+
+              </li>
+
+            </ul>
+          </li>
+            </li>
+                     </li>
+            <li class="nav-item has-treeview  {% if request.resolver_match.url_name == link_name %} menu-open {% endif %}">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                سفارشات ثبت شده 
+                مرجوعی 
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
  
-                {% link request 'order-list' 'لیست سفارشات ثبت شده ' %}
+                {% link request 'refund-list' 'لیست مرجوعی ها' %}
 
               </li>
-
+            
             </ul>
           </li>
             </li>

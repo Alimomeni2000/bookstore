@@ -1,43 +1,145 @@
 {% extends 'registration/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}{% block title-meta %}افزودن دسته بندی{% endblock %} {% endblock %}
+{% block title %}{% block title-meta %}جزئیات سفارش{% endblock %} {% endblock %}
 {% block main %}
-<div class="card card-danger">
+<div class="card card-danger" >
               <div class="card-header">
-                <h3 class="card-title mb-0 float-right">افزدون دسته بندی</h3>
+                <h3 class="card-title mb-0 float-left">جزئیات سفارش</h3>
               </div>
     <form method="POST" style="margin-left: 15px; margin-right: 15px;" enctype="multipart/form-data" action="{{ action_url }}">
         {% csrf_token %}
 
               <br>
-        {{ form.as_p }}
+{% if request.user.is_superuser %}
+        {{ form|crispy }}
+        <br>
+        <button class="btn btn-success">ذخیره</button>
+
+
+        <br>
+        <br>
+        <br>
+{% else %}
 
      <div class="form-row">
-      <div class="form-group col-md-6 mb-0">
-        {% comment %} {{ form.code|as_crispy_field }}  {% endcomment %}
+      <div class="form-group col-md-6 mb-0"> تحویل گیرنده :
+        {{object.user.get_full_name}}
       </div>
-   
     </div>
 
     <div class="form-row">
     
-      <div class="form-group col-md-6 mb-0">
-         {% comment %} {{ form.amount|as_crispy_field }}  {% endcomment %}
+      <div class="form-group col-md-6 mb-0"> ارسال به : 
+      {% if object.shipping_addres.state == None %}
+         {{object.shipping_address.state }} ،{{object.shipping_address.city }} ،
+         {{object.shipping_address.street_address }} ،{{object.shipping_address.apartment_address }} ،
+         {{object.shipping_address.zip_code }}
+         {% else %}
+                  {{object.billing_address.state }} ،{{object.billing_address.city }} ،
+         {{object.billing_address.street_address }} ،{{object.billing_address.apartment_address }} ،
+         {{object.billing_address.zip_code }}
+{% endif %}
       </div>
     </div>
- 
-    <br>
-        <button class="btn btn-success">ذخیره</button>
+     <div class="form-row">
+    
+      <div class="form-group col-md-6 mb-0"> جمع قیمت کالاهای مرسوله: :
+      {{object.get_total }} 
+         </div>
+    </div>
+      <div class="form-row">
+            <div class="form-row">
+
+      <div class="form-group col-md-20 mb-0" style="color:red;">  وضعیت سفارش :
+      {% if object.being_delivered == 'S' %}
+    <strong>در صف بررسی </strong>
+    <hr>
+      {% elif object.being_delivered == 'C' %}
+    <strong> تایید سفارش</strong>
+    <hr>
+      {% elif object.being_delivered == 'P' %}
+    <strong>آماده سازی سفارش</strong>
+    <hr>
+
+      {% elif object.being_delivered == 'p' %}
+    <strong>بسته بندی</strong>
+    <hr>
+
+      {% elif object.being_delivered == 'D' %}
+    <strong>تحویل به پست </strong>
+    <hr>
+
+      {% elif object.being_delivered == 'c' %}
+    <strong>  تحویل به مشتری</strong>
+    <hr>
+      {% endif %}
+  
+         </div>
+    </div>
+            </div>
+<h4> کتاب ها :</h4>
+ <section class="text-center mb-4" >
+      <div class="row wow fadeIn">
+        {% for book in object.books_to_list %}
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="card">
+            <div class="view overlay"  >
+              <a href="{{ book.get_absolute_url }}" style="margin-top:100px; margin-bottom: 150px;">
+                <div class="mask rgba-white-slight"  >
+                </div>
+              <img src="{{ book.image.url }}" class="card-img-top" />
+              </a>
+            </div>
+
+            <div class="card-body text-center font-weight-bold blue-text">
+
+                 <br>
+                     <br>
+                      <br>
+              <h4>
+                <strong  >
+                 {% if book.discount %}
+            <span  class="mr-1">
+              <del>{{ book.price }} </del>
+            </span>
+            <span>{{ book.discount }} تومان</span>
+            {% else %}
+            <span>{{ book.price }} تومان</span>
+            {% endif %}
+                </strong>
+              
+                <br>
+                
+              </h4>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+                  </a>
+    </section>
+  
+      
+    <!--Section: Products v.3-->
+      {% comment %} {% endfor %} {% endcomment %}
+   {% comment %} {{ object.books_to_list}} {% endcomment %}
+
+    <br> 
+    {% if object.refund_requested == None %}
          {% if request.resolver_match.kwargs.pk %}
-         <a href="{% url 'account:order-delete' order.pk %}" class="btn btn-danger">حذف</a>
+         <a href="{% url 'account:refund-create' %}" class="btn btn-danger">ثبت مرجوعی</a>
          {% endif %}
-        
+         {% endif %}
+        {% endif %}
 
         <br>
         <br>
         <br>
     </div>
+         </div>
+        </div>
 
     </form>
 </div>

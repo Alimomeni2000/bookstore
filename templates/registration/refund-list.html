@@ -19,7 +19,8 @@
                   <tbody>
                    {% for refund in object_list %}
                     <tr>
-                  <td><a href="{% url 'account:refund-update' refund.pk  %}">
+                    
+                  <td>{% if request.user.is_superuser %}<a href="{% url 'account:refund-update' refund.pk  %}">{% endif %}
 
                     {{refund.order.ref_code}}</a></td>
                     <td>{{refund.reason|slice:":50"}}</td>

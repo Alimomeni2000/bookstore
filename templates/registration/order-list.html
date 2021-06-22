@@ -13,12 +13,11 @@
                       <th>تاریخ ثبت</th>
                       <th>آدرس</th>
         
-                      <th>شناسه پرداخت</th>
                        <th>کوپن</th>
                        <th>وضعیت سفارش</th>
                        <th>وضعیت تحویل</th>
                        <th>درخواست مرجوعی</th>
-                       <th>اعطا مرجوعی</th>
+                       <th>تایید مرجوعی</th>
 
                     </tr>
                   </thead>
@@ -27,22 +26,18 @@
                     
                     <tr>
 
-                    <td>{{order.user}}</td>
+                    <td><a href="{% url 'account:order-update' order.pk  %}">{{order.user}}</a></td>
+                    
                     <td>{{order.jorderd_date}}</td>
 
                     {% if order.shipping_address != None %}
-                    <td>{{order.shipping_address.}}</td>
+                    <td>{{order.shipping_address.state}}</td>
                     {% elif order.billing_address != None %}
                     <td>{{order.billing_address.state}}</td>
                       {% else %}
                       <td>-----</td>
                     {% endif %}
 
-                          {% if order.payment == None %}
-                    <td>------</td>
-                    {% else %}
-                    <td>{{order.payment.strip_charge_id}}</td>
-                    {% endif %}
 
 
                     {% if order.coupon != None %}

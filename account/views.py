@@ -1,3 +1,4 @@
+from django import forms
 from django.db.models.fields import Field
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -13,7 +14,7 @@ from core.models import (Book,
                     UserProfile,
                     Refund,
                                         )
-from .forms import UserProfileForm,RefundForm,ProfileForm
+from .forms import UserProfileForm,RefundForm,ProfileForm,OrderForm
 # Create your views here.
 
 class Profile(UpdateView):
@@ -103,7 +104,8 @@ class OrderList(LoginRequiredMixin,ListView):
             return Order.objects.filter(user=self.request.user)
 class OrderUpdate(LoginRequiredMixin,UpdateView):
     model = Order
-    fields = "__all__"
+    # fields = "__all__"
+    form_class=OrderForm
 
     template_name='registration/order-create-update.html'
 
@@ -134,6 +136,11 @@ class UserDelete(LoginRequiredMixin,DeleteView):
 
 class RefundList(LoginRequiredMixin,ListView):
     queryset=Refund.objects.all()
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser:
+    #         return Refund.objects.all()
+    #     else:
+    #         return Refund.objects.filter(user=self.request.user)
     template_name='registration/refund-list.html'
 
 class RefundCreate(LoginRequiredMixin,CreateView):
