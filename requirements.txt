@@ -13,7 +13,7 @@ django-allauth
 django-rest-auth
 dj-rest-auth
 django-decouple
-django-comments-dab
+django-comments-dab==1.6.7
 django-widget-tweaks
 django-bootstrap4
 django-star-ratings

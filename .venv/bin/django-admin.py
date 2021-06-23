@@ -1,4 +1,4 @@
-#!/home/ali/Public/tyhlil/django_project_boilerplate/.venv/bin/python
+#!/home/ali/Public/bookstore/.venv/bin/python
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

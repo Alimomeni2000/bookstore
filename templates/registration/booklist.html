@@ -1,6 +1,7 @@
 {% extends 'registration/base.html' %}
 {% block title %}لیست کتاب ها{% endblock %} 
 {% block main %}
+{% if object_list %}
 <div class="row">
           <div class="col-12">
             <div class="card">
@@ -57,10 +58,20 @@
 
                   </tbody>
                 </table>
-              </div>
               <!-- /.card-body -->
+            {% else %}
+            <strong style="font-size:35px;">هیچ کتابی اضافه نشده است</strong>
+            <br>
+            <strong style="font-size:25px;"> برای افزدون کتاب 
+           <a href="{% url 'account:book-create' %}"> کلیک</a> کنید.</strong>
+
+{% endif %}
             </div>
+
             <!-- /.card -->
           </div>
+              </div>
         </div>
+
+
 {% endblock %}

@@ -175,7 +175,7 @@ def remove_from_cart(request, slug):
             return redirect("core:order-summary")
         else:
             messages.info(request, "این کتاب در سبد خرید شما وجود ندارد .")
-            return redirect("core:product", slug=slug)
+            return redirect("{% url 'core:product' product.slug %}")
     else:
         messages.info(request, "شما سفارش فعالی ندارید.")
         return redirect("core:product", slug=slug)

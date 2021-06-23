@@ -1,6 +1,7 @@
 {% extends 'registration/base.html' %}
 {% block title %}لیست کوپن ها{% endblock %} 
 {% block main %}
+{% if  object_list %}
 <div class="row">
           <div class="col-12">
             <div class="card">
@@ -26,8 +27,16 @@
                 {% endfor %}
                   </tbody>
                 </table>
+                                    {% else %}
+            <strong style="font-size:35px;">هیچ کد تخفیفی اضافه نشده است</strong>
+            <br>
+            <strong style="font-size:25px;"> برای افزدون کد تخفیف 
+           <a href="{% url 'account:coupon-create' %}"> کلیک</a> کنید.</strong>
+
+{% endif %}
               </div>
             </div>
           </div>
         </div>
+
 {% endblock %}

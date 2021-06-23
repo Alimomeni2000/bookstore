@@ -1,6 +1,7 @@
 {% extends 'registration/base.html' %}
 {% block title %}لیست سفارشات ثبت شده{% endblock %} 
 {% block main %}
+{% if object_list %}
 <div class="row">
           <div class="col-12">
             <div class="card">
@@ -72,8 +73,22 @@
                     
                   </tbody>
                 </table>
-              </div>
+             {% else %}
+             {% if request.user.is_superuser %}
+            <strong style="font-size:35px;">هیچ سفارشی ثبت نشده است</strong>
+            <br>
+            {% else %}
+            <strong style="font-size:35px;">برای شما سفارشی ثبت نشده است</strong>
+            <br>
+            <strong style="font-size:25px;"> برای افزدون سفارش 
+           <a href="{% url 'core:home' %}"> کلیک</a> کنید.</strong>
+{% endif %}
+{% endif %}
             </div>
+
+            <!-- /.card -->
           </div>
+              </div>
+        </div>
         </div>
 {% endblock %}

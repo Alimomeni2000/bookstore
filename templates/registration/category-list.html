@@ -1,6 +1,7 @@
 {% extends 'registration/base.html' %}
 {% block title %}لیست دسته بندی ها{% endblock %} 
 {% block main %}
+{% if object_list %}
 <div class="row">
           <div class="col-12">
             <div class="card">
@@ -36,6 +37,13 @@
                 {% endfor %}
                   </tbody>
                 </table>
+                                    {% else %}
+            <strong style="font-size:35px;">هیچ دسته بندی ای اضافه نشده است.</strong>
+            <br>
+            <strong style="font-size:25px;"> برای افزدون دسته بندی  
+           <a href="{% url 'account:coupon-create' %}"> کلیک</a> کنید.</strong>
+
+{% endif %}
               </div>
             </div>
           </div>

@@ -79,7 +79,7 @@ class UserProfile(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
     price = models.FloatField(verbose_name="قیمت کتاب")
-    discount_percent = models.FloatField(blank=True, null=True, verbose_name="قیمت نهایی")
+    discount_percent = models.FloatField(default=0,blank=True, null=True, verbose_name="درصد تخفیف")
     category = models.ManyToManyField(Category,related_name="books", verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
     slug = models.SlugField(verbose_name="آدرس")
@@ -130,9 +130,9 @@ class Book(models.Model):
     
     def discount_price(self):
         if self.value_discount == 0:
-            return self.price
+            return int(self.price)
         else:
-            return self.price-(self.price*self.discount_percent/100)
+            return int(self.price-(self.price*self.discount_percent/100))
 class SlidShow(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE, verbose_name="نام کتاب")
     status = models.BooleanField(default=False, verbose_name="وضعیت")

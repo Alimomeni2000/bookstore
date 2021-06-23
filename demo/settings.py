@@ -1,8 +1,7 @@
 import os
-from decouple import config
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-DEBUG = True
+DEBUG =True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ALLOWED_HOSTS = ['papyrusbook-bookshoponline.fandogh.cloud']
 ALLOWED_HOSTS = []
@@ -29,7 +28,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'allauth.socialaccount',
-    'rest_framework',
 
 
     'rest_framework.authtoken',
@@ -43,6 +41,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
     # 'account',
+    'rest_framework',
 
 
 
