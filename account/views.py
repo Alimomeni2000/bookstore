@@ -3,7 +3,7 @@ from django.db.models.fields import Field
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.conf import settings
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView,CreateView,UpdateView,DeleteView
@@ -16,8 +16,7 @@ from core.models import (Book,
                                         )
 from .forms import UserProfileForm,RefundForm,ProfileForm,OrderForm
 # Create your views here.
-
-class Profile(UpdateView):
+class Profile(LoginRequiredMixin,UpdateView):
     model =User
     form_class=ProfileForm
     success_url= reverse_lazy('account:profile')
@@ -33,6 +32,8 @@ class BookList(LoginRequiredMixin,ListView):
 class BookCreate(LoginRequiredMixin,CreateView):
     model = Book
     fields = "__all__"
+    success_url= reverse_lazy('account:book-list')
+
     template_name='registration/book-create-update.html'
 
 class BookUpdate(LoginRequiredMixin,UpdateView):

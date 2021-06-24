@@ -6,7 +6,7 @@ register = template.Library()
 def navbar():
     
     return {
-        "category": Category.objects.all(),
+        "category": Category.objects.active(),
         
     }
 @register.inclusion_tag("registration/partials/link.html")

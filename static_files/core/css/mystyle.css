@@ -6,7 +6,9 @@
          url('Sahel.woff') format('woff'),
          url('Sahel.ttf') format('truetype');
   }
-  
+mysearch{
+    direction: ltr !important;
+}
   body {
       direction: rtl !important;
       text-align: right !important;
@@ -20,3 +22,4 @@
 .form-check-label {
     margin-right: 20px !important
 }
+

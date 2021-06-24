@@ -1,6 +1,8 @@
 {% load cart_template_tags %}
+{% load static %}
+  <link href="{% static 'core/css/navbar.css' %}" rel="stylesheet">
 
-<nav style="margin-bottom:-105px !important"
+<nav style="margin-bottom:-105px !important; "  
   class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar"
 >
   <div class="container" >
@@ -8,29 +10,15 @@
     <a style="font-size:25px;" class="navbar-brand waves-effect" href="/">
       <strong class="blue-text"> فروشگاه &nbsp;&nbsp;</strong>
     </a>
-
-    
-            {% for book in object_list %}
-                {% for cat in book.category.active %}
-                {% if cat.parent == None %}
-                <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
-                {% if cat.children.all %}
-                  {% include 'category_loop.html' %}
-                {% endif %}
-                {% endif %}
-              {% endfor %}
+  {% for cat in category %}
+      {% if cat.parent == None %}
+          <a class="nav-link" href="{% url 'core:category' cat.slug %}">{{cat.title}}</a>
+          {% if cat.children.all %}
+            {% include 'category_loop.html' %}
+          {% endif %}
+      {% endif %}
     {% endfor %}
 
-    {% for cat in object.category.active %}
-                {% if cat.parent == None %}
-                <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
-                {% if cat.children.all %}
-                  {% include 'category_loop.html' %}
-                {% endif %}
-                {% endif %}
-    {% endfor %}
-    <!-- Collapse -->
-    
     <button
       class="navbar-toggler"
       type="button"

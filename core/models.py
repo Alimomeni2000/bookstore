@@ -9,7 +9,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from extensions.utils import jalali_converter
 from comment.models import Comment
 # Create your models here.
-
+from django.utils.html import format_html
 
 class IPAddress(models.Model):
     ip_address = models.GenericIPAddressField(verbose_name="آدرس آی پی")
@@ -39,7 +39,7 @@ BEING_DELIVERED = (
 
 class Category(models.Model):
     parent = models.ForeignKey(
-        'self', default=None, null=True, blank=True, on_delete=models.CASCADE,related_name="children",verbose_name="زیر دسته")
+        'self', default=None, null=True, blank=True, on_delete=models.SET_NULL,related_name="children",verbose_name="زیر دسته")
     title = models.CharField(max_length=200, verbose_name='عنوان دسته بندی')
     slug = models.SlugField(max_length=200, verbose_name='آدرس دسته بندی')
     status = models.BooleanField(default=True, verbose_name='وضعیت')
@@ -55,6 +55,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی ها"
+        ordering =['parent__id']
         
 
     def __str__(self):
@@ -86,9 +87,9 @@ class Book(models.Model):
     description = models.TextField(verbose_name="توضیحات")
     pages = models.IntegerField(blank=True, null=True, verbose_name="تعداد صفحات")
     year = models.IntegerField(blank=True, null=False, verbose_name="سال انتشار")
-    author = models.CharField(max_length=200, blank=True, null=False, verbose_name="نویسنده")
-    translator = models.CharField(max_length=100, blank=True, null=True, verbose_name="مترجم")
-    publishers = models.CharField(max_length=100, blank=True, null=False, verbose_name="ناشر")
+    author = models.CharField(max_length=200, verbose_name="نویسنده")
+    translator = models.CharField(max_length=100, verbose_name="مترجم")
+    publishers = models.CharField(max_length=100, verbose_name="ناشر")
     special_offer = models.BooleanField(default=False, verbose_name="پیشنهاد ویژه")
     comments = GenericRelation(Comment, verbose_name="نظرات")
     image = models.ImageField(blank=True, null=True, upload_to='book', verbose_name="تصویر")

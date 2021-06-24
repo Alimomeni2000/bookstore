@@ -1,4 +1,5 @@
 {% load static %}
+{% load base_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
   {% block extra_head %}
   {% endblock %}
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+  <link href="{% static 'core/css/navbar.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/mdb.min.css' %}" rel="stylesheet">
 
@@ -58,8 +60,8 @@
 </head>
 
 <body>
-{% include "navbar.html" %}
-
+{% comment %} {% include "navbar.html" %} {% endcomment %}
+{% navbar %}
     <div class="mt-5 pt-4">
     {% if messages %}
         {% for message in messages %}

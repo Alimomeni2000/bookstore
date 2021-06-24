@@ -87,7 +87,7 @@ body {
 .form-group input,
 .form-group .input-group-addon {
     height: 52px  !important;
-    color: #FFF !important;
+    color:#495057 !important;
     font-size: 16px !important;
     border-radius: 40px !important;
     -webkit-box-shadow: none !important;

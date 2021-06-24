@@ -11,9 +11,10 @@ ALLOWED_HOSTS = []
 # STRIPE_SECRET_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
 # STRIPE_PUBLIC_KEY = config('STRRIPE_TEST_PUBLIC_KEY')
 # STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
+
 LOGIN_REDIRECT_URL = "account:profile"
-LOGIN_URL = "login"
-LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "account:login"
+# LOGOUT_REDIRECT_URL = "login"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -28,7 +29,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'allauth.socialaccount',
-
 
     'rest_framework.authtoken',
     'rest_auth',
