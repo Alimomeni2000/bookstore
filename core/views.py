@@ -6,14 +6,14 @@ from django.urls import reverse
 from azbankgateways import bankfactories, models as bank_models, default_settings as settings
 
 import logging
-
+from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.urls import reverse
 
 from azbankgateways import bankfactories, models as bank_models, default_settings as settings
 
 from django.urls.base import reverse_lazy
-from django.core.paginator import Paginator
+
 import stripe
 from django.conf import settings
 from django.contrib import messages
@@ -26,14 +26,15 @@ from django.utils import timezone
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView, View
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from django.db.models import Q
+
 from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile,Category
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 
-
+def error_404_view(request,exception):
+    return render(request,'core/error.html')
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
@@ -54,22 +55,33 @@ def is_valid_form(values):
 
 
 class HomeView(ListView):
+
     model = Book
-    paginate_by = 10
-    # queryset = Book.objects.all()
     template_name = "home.html"
 
 
-# def slideShowView(request):
+def slideShowView(request):
 
-#     return render(request, 'home.html',
-#                   {'slides': SlidShow.objects.filter(status=True)
-#                    })
+    return render(request, 'home.html',
+                  {'slides': SlidShow.objects.filter(status=True)
+                   })
 
+
+class SearchList(ListView):
+    paginate_by = 10
+    template_name = 'search_list.html'
+
+    def get_queryset(self):
+        search = self.request.GET.get('q')
+        return Book.objects.all().filter(Q(title__icontains=search) | Q(description__icontains=search) | Q(translator__icontains=search) | Q(author__icontains=search) | Q(publishers__icontains=search))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('q')
+        return context
 
 class CategoryList(ListView):
 	paginate_by = 10
-	# template_name = "category.html"
+	template_name = "category.html"
 
 	def get_queryset(self):
 		global category
@@ -98,17 +110,6 @@ class Login(LoginView):
     def get_success_url(self):
         return redirect('home.html')
 
-class SearchList(ListView):
-    paginate_by = 1
-    template_name = 'search_list.html'
-
-    def get_queryset(self):
-        search = self.request.GET.get('q')
-        return Book.objects.all().filter(Q(title__icontains=search) | Q(description__icontains=search) | Q(translator__icontains=search) | Q(author__icontains=search) | Q(publishers__icontains=search))
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['search'] = self.request.GET.get('q')
-        return context
 
 class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):

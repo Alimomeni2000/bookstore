@@ -29,7 +29,7 @@ urlpatterns = [
 
 
 ]
-
+handler404= 'core.views.error_404_view'
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)

@@ -14,6 +14,7 @@ from .views import (
     RequestRefundView,
     CategoryList,
     SearchList,
+
     # go_to_gateway_view
 )
 
@@ -22,15 +23,12 @@ app_name = 'core'
 urlpatterns = [
     path('login/', Login.as_view(), name='login'),
     path('', HomeView.as_view(), name='home'),
-	path('page/<int:page>', HomeView.as_view(), name="home"),
-
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
 	path('category/<slug:slug>', CategoryList.as_view(), name="category"),
 	path('category/<slug:slug>/page/<int:page>', CategoryList.as_view(), name="category"),
     path('search/', SearchList.as_view(), name="search"),
 	path('search/page/<int:page>', SearchList.as_view(), name="search"),
-
     path('product/<int:pk>', BookDetailView.as_view(), name='product'),
 
     path('add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),

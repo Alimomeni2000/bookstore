@@ -11,10 +11,8 @@ ALLOWED_HOSTS = []
 # STRIPE_SECRET_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
 # STRIPE_PUBLIC_KEY = config('STRRIPE_TEST_PUBLIC_KEY')
 # STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
-
 LOGIN_REDIRECT_URL = "account:profile"
 LOGIN_URL = "account:login"
-# LOGOUT_REDIRECT_URL = "login"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,6 +27,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'allauth.socialaccount',
+
 
     'rest_framework.authtoken',
     'rest_auth',
@@ -60,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

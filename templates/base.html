@@ -1,5 +1,4 @@
 {% load static %}
-{% load base_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +9,6 @@
   {% block extra_head %}
   {% endblock %}
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-  <link href="{% static 'core/css/navbar.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/mdb.min.css' %}" rel="stylesheet">
 
@@ -19,9 +17,9 @@
   <link href="{% static 'core/css/register.css' %}" rel="stylesheet">
   <link href="{% static 'core/css/d.css' %}" rel="stylesheet">
 
-  
+  <link type="text/css" rel="stylesheet" href="{% static 'error_404/css/font-awesome.min.css' %}" />
+  <link type="text/css" rel="stylesheet" href="{% static 'error_404/css/style.css' %}" />
 
-  {% comment %} <link href="{% static 'core/css/mycss.css' %}" rel="stylesheet"> {% endcomment %}
   
   <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
 <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
@@ -60,8 +58,8 @@
 </head>
 
 <body>
-{% comment %} {% include "navbar.html" %} {% endcomment %}
-{% navbar %}
+{% include "navbar.html" %}
+
     <div class="mt-5 pt-4">
     {% if messages %}
         {% for message in messages %}

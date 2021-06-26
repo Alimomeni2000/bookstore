@@ -4,6 +4,7 @@ from .views import (
     BookDetail,
     # UserList,
     # UserDetail,
+    CheckoutView,
     add_to_cart,
     remove_from_cart,
     remove_single_book_from_cart,
@@ -18,6 +19,7 @@ urlpatterns = [
          name='remove-single-book-from-cart'),
     path('', BookList.as_view(), name='list'),
     path('/<int:pk>', BookDetail.as_view(), name='detail'),
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
 
     # path('users/', UserList.as_view(), name='user-list'),

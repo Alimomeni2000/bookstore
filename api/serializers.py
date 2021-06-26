@@ -1,6 +1,6 @@
 from django.db.models.base import ModelState
 
-from core.models import Book
+from core.models import Book,Category
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from core.models import OrderBook, Order
@@ -13,6 +13,13 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = "__all__"
+        
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
