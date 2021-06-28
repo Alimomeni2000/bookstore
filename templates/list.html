@@ -8,15 +8,17 @@
 	{% comment %} <h3 class="alert alert-primary text-center">دسته‌بندی: {{category.title}}</h3> {% endcomment %}
  <!--Navbar-->
     <nav
-      class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5" style="background-color:#f9dbdbc7 !important;border-radius:5px;"    >
+      class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5" style="background-color:#fff !important;border-radius:5px;"    >
       <!-- Navbar brand -->
         <span class="navbar-brand" style="color:#000 !important">
       {% block navbar_container %} {% endblock  %}
   </span>
-<form class="form-inline mt-3 float-left" style="margin-right:450px !important;margin-top: 0rem !important;padding: 0 !important; box-shadow:0px 0px 0px 0px !important" action="{% url 'core:search' %}">
-              <input class="form-control mr-sm-2" name="q" style="background-color:#f0f0f1 !important;"  type="text" placeholder="جستجو" aria-label="Search">
-    <button class="btn btn-success"  style="background-color: #918383 !important; padding-top: 7px !important; padding-bottom: 7px !important; border-radius:5px; margin-right:5px">جستجو</button>
+  <div style="margin-right:auto !important">
+<form class="form-inline mt-3 float-left" style="margin-top: 0rem !important;padding: 0 !important; box-shadow:0px 0px 0px 0px !important" action="{% url 'core:search' %}">
+          <i class="c-search js-search">   <input class="form-control mr-sm-2" name="q" style="background-color:#f0f0f1 !important;"  type="text" placeholder="جستجو" aria-label="Search"></i> 
+    {% comment %} <button class="btn btn-success"  style="background-color: #918383 !important; padding-top: 7px !important; padding-bottom: 7px !important; border-radius:5px; margin-right:5px">جستجو </button> {% endcomment %}
   </form>
+  </div>
     </nav>
     <!--/.Navbar-->
 

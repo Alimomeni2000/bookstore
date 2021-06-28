@@ -18,5 +18,4 @@ django-widget-tweaks
 django-bootstrap4
 django-star-ratings
 az-iranian-bank-gateways
-
-
+social-auth-app-django

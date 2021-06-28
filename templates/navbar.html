@@ -8,27 +8,29 @@
     <a style="font-size:25px;" class="navbar-brand waves-effect" href="/">
       <strong class="blue-text"> فروشگاه &nbsp;&nbsp;</strong>
     </a>
-
+<div class="dropdown show">
+  <a class=" dropdown-toggle" style="color:#000 ;content: None; font-size:15px " role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
     
-            {% for book in object_list %}
-                {% for cat in book.category.active %}
-                {% if cat.parent == None %}
-                <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
-                {% if cat.children.all %}
+      <strong class="blue-text"><i class="fa fa-list"></i> دسته بندی ها &nbsp;&nbsp;</strong>
+    </a>
+  <div class="dropdown-menu" style="text-align: right;" aria-labelledby="dropdownMenuLink">
+    {% for cat in category %}
+                {% comment %} {% if cat.parent == None %} {% endcomment %}
+                <a class="blue-text dropdown-item"  href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
+                {% comment %} {% if cat.children.all %}
                   {% include 'category_loop.html' %}
-                {% endif %}
-                {% endif %}
-              {% endfor %}
+                {% endif %} {% endcomment %}
+                {% comment %} {% endif %} {% endcomment %}
     {% endfor %}
 
-    {% for cat in object.category.active %}
-                {% if cat.parent == None %}
-                <a class="blue-text" href="{% url 'core:category' cat.slug %}">{{cat.title}} &nbsp;&nbsp; </a>
-                {% if cat.children.all %}
-                  {% include 'category_loop.html' %}
-                {% endif %}
-                {% endif %}
-    {% endfor %}
+  </div>
+</div>
+        <a style="font-size:15px;" class="navbar-brand waves-effect" href="{% url 'core:contact' %}">
+      <strong class="blue-text"> تماس با ما &nbsp;&nbsp;</strong>
+    </a>
+        <a style="font-size:15px;" class="navbar-brand waves-effect" href="{% url 'core:about' %}">
+      <strong class="blue-text">درباره ما &nbsp;&nbsp;</strong>
+    </a>
     <!-- Collapse -->
     
     <button

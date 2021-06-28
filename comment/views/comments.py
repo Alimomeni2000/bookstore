@@ -61,44 +61,6 @@ class CreateComment(BaseCommentView):
             parent=parent_comment,
         )
 
-        # send email section
-        current_site = get_current_site(self.request)
-        article = self.comment.content_object
-        author_email = article.author.email
-        user_email = self.comment.user.email
-        if author_email == user_email:
-            author_email = False
-            user_email = False
-        parent_email = False
-        if self.comment.parent:
-            parent_email = self.comment.parent.user.email
-            if parent_email in [author_email, user_email]:
-                parent_email = False
-
-        if author_email:
-            email = EmailMessage(
-                        "دیدگاه جدید",
-                        "دیدگاه جدیدی برای مقاله «{}» که شما نوینده آن هستید، ارسال شده:\n{}{}".format(article, current_site, reverse('blog:detail', kwargs={'slug': article.slug})),
-                        to=[author_email]
-            )
-            email.send()
-
-        if user_email:
-            email = EmailMessage(
-                        "دیدگاه دریافت شد",
-                        "دیدگاه شما دریافت شد و به زودی به آن پاسخ می دهیم.",
-                        to=[user_email]
-            )
-            email.send()
-
-        if parent_email:
-            email = EmailMessage(
-                        "پاسخ به دیدگاه شما",
-                        "پاسخی به دیدگاه شما در مقاله «{}» ثبت شده است. برای مشاهده بر روی لینک زیر کلیک کنید:\n{}{}".format(article, current_site, reverse('blog:detail', kwargs={'slug': article.slug})),
-                        to=[parent_email]
-            )
-            email.send()
-
         return self.render_to_response(self.get_context_data())
 
 

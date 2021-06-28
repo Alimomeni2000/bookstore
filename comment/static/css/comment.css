@@ -72,20 +72,13 @@ input#search-input:focus::placeholder {
 }
 
 .flagged-comment {
-    color: #999;
+    color: #fff;
 }
 
 .flag-rejected, .flag-resolved {
     stroke: #00bc8c;
 }
 
-.media-comment-bubble {
-    border-radius: 20px;
-    border-top-right-radius: 0;
-    position: relative;
-    background-color: #f2f2f2;
-    padding: 1rem 1.25rem;
-}
 .media-comment-bubble.left-top:after {
     content: ' ';
     position: absolute;
@@ -96,7 +89,7 @@ input#search-input:focus::placeholder {
     top: 0px;
     bottom: auto;
     border: 18px solid transparent;
-    border-top-color: #f2f2f2;
+    border-top-color: #fff;
 }
 
 .js-comment-content {

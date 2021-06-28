@@ -31,12 +31,37 @@ from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.core.mail import send_mail
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def error_404_view(request,exception):
     return render(request,'core/error.html')
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
+
+
+
+def contact(request):
+    if request.method == "POST":
+
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+        #send an mail
+        send_mail(
+            name,
+            message,
+            email,
+            ['papyrusbook1@gmail.com'],
+        )
+        return render(request, "contact_us.html",{'name' : name})
+    else:
+        return render(request, "contact_us.html")
+
+
+def about(request):
+
+    return render(request, "about_us.html")
 
 
 def products(request):

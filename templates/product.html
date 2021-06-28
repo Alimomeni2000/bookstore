@@ -9,7 +9,7 @@
     <div class="row wow fadeIn">
       <!--Grid column-->
       <div class="col-md-6 mb-4">
-        <img src="{{ object.image.url }}" class="card-img-top" />
+        <img style="  border-radius: 8px;   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" src="{{ object.image.url }}" class="card-img-top" />
         <br>
 
         <br>
@@ -80,8 +80,12 @@
             <span>سال انتشار : {{ object.year }}</span>
             <br>
             <span>نویسنده : {{ object.author }}</span>
+            {% if object.translator == None %}
+            {% else %}
             <br>
+
             <span>مترجم : {{ object.translator }}</span>
+            {% endif %}
             <br>
             <span>ناشر :{{ object.publishers }}</span>
             <br>
@@ -92,24 +96,8 @@
 
           <p class="lead font-weight-bold">توضیحات</p>
 
-          <p>{{ object.description }}</p>
-          
-          {% comment %}
-          <form class="d-flex justify-content-left">
-            <!-- Default input -->
-            <input
-              type="number"
-              value="1"
-              aria-label="Search"
-              class="form-control"
-              style="width: 100px"
-            />
-            <button class="btn btn-primary btn-md my-0 p" type="submit">
-              Add to cart
-              <i class="fas fa-shopping-cart ml-1"></i>
-            </button>
-          </form>
-          {% endcomment %}
+          <p>{{ object.description|safe }}</p>
+         
         </div>
     
         <!--Content-->

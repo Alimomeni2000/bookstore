@@ -144,7 +144,7 @@
               {% endif %}
               <hr>
 
-               <h3> پرداخت</h3> 
+               <h3> روش پرداخت</h3> 
               <div class="d-block my-3">
                 {% for value, name in form.fields.payment_option.choices %}
                 <div class="custom-control custom-radio">
@@ -155,7 +155,7 @@
               </div>
 
               <hr class="mb-4">
-              <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+              <button class="btn btn-primary btn-lg btn-block" type="submit">پرداخت</button>
 
          {% comment %} <a  href="{% url 'go_to_gateway' %}" class="btn btn-primary btn-lg btn-block a_link" target="_blank">پرداخت</a> {% endcomment %}
             </form>

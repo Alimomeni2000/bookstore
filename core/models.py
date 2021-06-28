@@ -78,7 +78,7 @@ class UserProfile(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
-    price = models.FloatField(verbose_name="قیمت کتاب")
+    price = models.FloatField(verbose_name="درصد تخفیف")
     discount_percent = models.FloatField(default=0,blank=True, null=True, verbose_name="درصد تخفیف")
     category = models.ManyToManyField(Category,related_name="books", verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
@@ -92,8 +92,7 @@ class Book(models.Model):
     special_offer = models.BooleanField(default=False, verbose_name="پیشنهاد ویژه")
     comments = GenericRelation(Comment, verbose_name="نظرات")
     image = models.ImageField(blank=True, null=True, upload_to='book', verbose_name="تصویر")
-    imageslide = models.ImageField(
-        blank=True, null=True, upload_to='book', verbose_name="اسلاید تصویر")
+
     hits= models.ManyToManyField(IPAddress,blank=True,related_name='hits',verbose_name='بازدیدها')
     class Meta:
         verbose_name = "کتاب"

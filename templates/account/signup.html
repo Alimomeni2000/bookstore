@@ -75,14 +75,28 @@
                   <div class="div-butt">
 <br>
               <button class='btn btn-primary butt' type="submit">{% trans "Sign Up" %} 	&larr;</button>
-            </form> 
                  </div>
+            </form> 
                  <br>
+                    <h3>
+                                      <div class="div-butt">
+<br>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" style="border: 1px solid rgba(28, 28, 28, 0.51);" class="btn btn-white">  ثبت نام با حساب گوگل <i class="fab fa-google	"> </i></a>
+                 </div>
+                    </h3>
+                 <br>
+                  <div class="div-butt">
             <p>{% blocktrans %}حساب کاربری دارید ؟ <a href="{{ login_url }}">وارد </a>شوید.{% endblocktrans %}</p>
+                </div>
                 </div>
             </div>
         </div>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 </section>
 <script src="{% static 'registrations/assets/js/jquery.min.js'%} "></script>
 <script src="{% static 'registrations/assets/js/popper.js'%} "></script>

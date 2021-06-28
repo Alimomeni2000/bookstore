@@ -1,0 +1,114 @@
+@font-face {
+    font-family: Sahel;
+    src: url('Sahel.eot');
+    src: url('Sahel.eot?#iefix') format('embedded-opentype'),
+         url('Sahel.woff2') format('woff2'),
+         url('Sahel.woff') format('woff'),
+         url('Sahel.ttf') format('truetype');
+  }
+
+.my{
+      direction: rtl !important;
+      text-align: right !important;
+      font-family: "Sahel" !important;
+}
+.nav ul {
+  position: absolute;
+  white-space: nowrap;
+  border-bottom: 5px solid  rgb(0, 0, 0);
+  z-index: 1;
+  left: -99999em;
+}
+.nav > li:hover > ul {
+  left: auto;
+  margin-top: 5px;
+  min-width:120px ;
+}
+.nav > li li:hover > ul { 
+  left: 100%;
+  margin-left: 1px;
+  top: -1px;
+}
+/* arrow hover styling */
+.nav > li > a:first-child:nth-last-child(2):before { 
+  border-top-color: #aaa; 
+}
+.nav > li:hover > a:first-child:nth-last-child(2):before {
+  border: 5px solid transparent; 
+  border-bottom-color:  rgb(0, 0, 0); 
+  margin-top:-5px
+}
+.nav  li > a:first-child:nth-last-child(2):before {  
+  border-left-color: #aaa; 
+  margin-top: -5px
+}
+.nav li li:hover > a:first-child:nth-last-child(2):before {
+  border: 5px solid transparent; 
+  right: 10px; 
+}nav {  
+  direction: rtl !important;
+  
+  text-align: center;
+}
+nav ul {
+  margin: 0;
+  padding:0;
+  list-style: none;
+}
+.nav a {
+  background:   rgb(194, 194, 194);
+  color: #2196f3 !important;
+  padding: 0.8em 1.8em;
+  font-size: 14px !important;
+  position: relative;
+}
+
+.nav{  
+  font-family: "Sahel" !important;
+
+  vertical-align: top; 
+
+  border-radius:6px;
+}
+.nav li {
+  position: relative;
+}
+.nav > li { 
+  float: left; 
+  border-bottom: 4px #aaa solid; 
+  margin-right: 1px; 
+} 
+.nav > li > a { 
+  margin-bottom: 1px;
+}
+.nav > li:hover, 
+.nav > li:hover > a { 
+  border-bottom-color: #2196f3 !important;
+}
+.nav li:hover > a { 
+  color: rgb(0, 0, 0); 
+}
+.nav > li:first-child { 
+  border-radius: 4px 0 0 4px;
+} 
+.nav > li:first-child > a { 
+  border-radius: 4px 0 0 0;
+}
+.nav > li:last-child { 
+  border-radius: 0 0 4px 0; 
+  margin-right: 0;
+} 
+.nav > li:last-child > a { 
+  border-radius: 0 4px 0 0;
+}
+.nav li li a { 
+  margin-top: 1px;
+}
+
+.nav li a:first-child:nth-last-child(2):before { 
+  content: ""; 
+  height: 0; 
+  width: 0; 
+  top: 50% ;
+  right:5px;  
+ }

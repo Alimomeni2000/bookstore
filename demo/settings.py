@@ -13,6 +13,10 @@ ALLOWED_HOSTS = []
 # STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
 LOGIN_REDIRECT_URL = "account:profile"
 LOGIN_URL = "account:login"
+# LOGIN_URL = '/auth/login/google-oauth2/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIAL_AUTH_URL_NAMESPACE = 'social' 
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -31,6 +35,8 @@ INSTALLED_APPS = [
 
     'rest_framework.authtoken',
     'rest_auth',
+    'social_django',
+
     'dj_rest_auth',
     'comment',
     'star_ratings',
@@ -50,6 +56,7 @@ SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT= 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'papyrusbook1@gmail.com'
 EMAIL_HOST_PASSWORD = 'ali13791379'
@@ -59,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -171,3 +178,21 @@ AZ_IRANIAN_BANK_GATEWAYS = {
         # and so on ...
     ],
 }
+
+
+
+
+
+
+
+
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '958656248970-ii18d5ufqts2g3d93chele3udh6gjce1.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '0qH_wv-X5r1PEaMegWRJEl0I'
