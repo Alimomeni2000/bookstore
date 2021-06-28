@@ -1,7 +1,7 @@
 from django.urls import path
 from django.views.generic.base import View
 from .views import (
-    Login,
+    # Login,
     BookDetailView,
     CheckoutView,
     HomeView,
@@ -23,7 +23,7 @@ from .views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('login/', Login.as_view(), name='login'),
+    # path('login/', Login.as_view(), name='login'),
     path('', HomeView.as_view(), name='home'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),

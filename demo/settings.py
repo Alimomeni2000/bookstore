@@ -163,7 +163,7 @@ AZ_IRANIAN_BANK_GATEWAYS = {
         'IDPAY': {
             'MERCHANT_CODE': 'fba1d424-acfe-4499-a0e6-fa9ed24d353a ',
             'METHOD': 'POST',
-            'X_SANDBOX': 1,
+            'X_SANDBOX':0,
         },
 
 

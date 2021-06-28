@@ -1,5 +1,7 @@
 {% load static %}
 {% load base_tags %}
+{% load cart_template_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,6 +65,50 @@
 <body style="background: #e6e1e17d !important;">
 {% comment %} {% include "navbar.html" %} {% endcomment %}
 {%  navbar %}
+<ul class="navbar-nav nav-flex-icons">
+        {% if  user.is_authenticated%}
+        <li class="nav-item">
+
+          <a class="nav-link waves-effect" href="{% url 'core:order-summary' %}">
+            <span class="badge red z-depth-1 mr-1">{{ request.user|cart_book_count }}
+             </span> 
+            <i class="fas fa-shopping-cart"></i>
+            
+            <span class="clearfix d-none d-sm-inline-block">     سبد خرید </span>
+          </a>
+        </li>
+           <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account:profile' %}">
+            <i class="fa fa-user"></i>
+
+            <span class="clearfix d-none d-sm-inline-block ">حساب کاربری</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account_logout' %}">
+            <span class="clearfix d-none d-sm-inline-block"> خروج   </span>
+          </a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account_login' %}">
+            <span class="clearfix d-none d-sm-inline-block"> ورود  </span>
+          </a>
+        </li>
+
+
+        	
+
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
+            <span class="clearfix d-none d-sm-inline-block"> ثبت نام </span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+ </div>
+  </div>
+</nav>
 
     <div class="mt-5 pt-4">
     {% if messages %}
