@@ -1,6 +1,4 @@
 import os
-
-from django.conf.urls import handler404
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG =False
@@ -65,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -75,6 +72,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'demo.urls'
 CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# AUTH_USER_MODEL= 'account.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -107,6 +105,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_files')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

@@ -1,5 +1,21 @@
-from django.http import HttpResponse, Http404
+from django.urls import reverse
 from azbankgateways import bankfactories, default_settings as settings
+import random
+import string
+from django.urls import reverse
+from azbankgateways import bankfactories, models as bank_models, default_settings as settings
+
+import logging
+from django.db.models import Q
+from django.http import HttpResponse, Http404
+from django.urls import reverse
+
+from azbankgateways import bankfactories, models as bank_models, default_settings as settings
+
+from django.urls.base import reverse_lazy
+
+import stripe
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,36 +23,22 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView, View
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.urls.base import reverse_lazy
-from django.db.models import Q
-from django.urls import reverse
-import logging
-import random
-import string
-from azbankgateways import bankfactories, models as bank_models, default_settings as settings
-from .models import (Book,
-        OrderBook,
-        Order,
-        SlidShow,
-        Address,
-        Coupon,
-        Refund,
-        UserProfile,
-        Category
-    )
 
-def handler404(request,exception):
-    return render(request,'core/error.html')
-    
+from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile,Category
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+# stripe.api_key = settings.STRIPE_SECRET_KEY
+from django.core.mail import send_mail
+
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
-def notfound(request, exception):
+
+def error_404_view(request, exception):
     return render(request,'404.html')
 
 def contact(request):
@@ -52,20 +54,20 @@ def contact(request):
             email,
             ['papyrusbook1@gmail.com'],
         )
-        return render(request, "core/contact_us.html",{'name' : name})
+        return render(request, "contact_us.html",{'name' : name})
     else:
-        return render(request, "core/contact_us.html")
+        return render(request, "contact_us.html")
 
 
 def about(request):
 
-    return render(request, "core/about_us.html")
+    return render(request, "about_us.html")
 
 def products(request):
     context = {
         'books': Book.objects.all()
     }
-    return render(request, "core/products.html", context)
+    return render(request, "products.html", context)
 
 
 def is_valid_form(values):
@@ -80,20 +82,20 @@ from django.contrib.auth.models import User
 class HomeView(ListView):
 
     model = Book
-    template_name = "core/home.html"
+    template_name = "home.html"
     def get_object(self):
         return User.objects.get(user=self.request.user.is_authenticated)
 
 def slideShowView(request):
 
-    return render(request, 'core/home.html',
+    return render(request, 'home.html',
                   {'slides': SlidShow.objects.filter(status=True)
                    })
 
 
 class SearchList(ListView):
     paginate_by = 10
-    template_name = 'core/search_list.html'
+    template_name = 'search_list.html'
 
     def get_queryset(self):
         search = self.request.GET.get('q')
@@ -105,7 +107,7 @@ class SearchList(ListView):
 
 class CategoryList(ListView):
 	paginate_by = 10
-	template_name = "core/category.html"
+	template_name = "category.html"
 
 	def get_queryset(self):
 		global category
@@ -118,6 +120,21 @@ class CategoryList(ListView):
 		return context
 
 
+# class Login(LoginView):
+
+#     def form_valid(self, request, form):
+#         context = {}
+#         form = LoginForm(request.POST or None)
+#         context['form'] = form
+#         context['form'] = form
+#         if request.POST:
+#             if form.is_valid():
+#                 temp = form.cleaned_data.get("singup")
+#                 print(temp)
+
+#     def get_success_url(self):
+#         return redirect('home.html')
+
 
 class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
@@ -126,7 +143,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             context = {
                 'object': order
             }
-            return render(self.request, 'core/order_summary.html', context)
+            return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
             messages.warning(self.request, "شما سفارش فعالی ندارید.")
             return redirect("/")
@@ -141,7 +158,7 @@ class BookDetailView(DetailView):
             book.hits.add(ip_address)
         return book
 
-    template_name = "core/product.html"
+    template_name = "product.html"
 
 
 @login_required
@@ -265,7 +282,7 @@ class RequestRefundView(View):
         context = {
             'form': form
         }
-        return render(self.request, "core/request_refund.html", context)
+        return render(self.request, "request_refund.html", context)
 
     def post(self, *args, **kwargs):
         form = RefundForm(self.request.POST)
@@ -323,7 +340,7 @@ class CheckoutView(View):
             if billing_address_qs.exists():
                 context.update(
                     {'default_billing_address': billing_address_qs[0]})
-            return render(self.request, "core/checkout.html", context)
+            return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
             messages.info(self.request, "شما سفارش فعالی ندارید.")
             return redirect("core:checkout")

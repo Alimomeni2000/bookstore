@@ -1,12 +1,10 @@
 from django.conf import settings
-from django.conf.urls import handler404, url
-
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from azbankgateways.urls import az_bank_gateways_urls
-from core.views import go_to_gateway_view ,callback_gateway_view,handler404
+from core.views import go_to_gateway_view ,callback_gateway_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('allauth.urls')),
@@ -27,16 +25,11 @@ urlpatterns = [
     path('go_to_gateway/',go_to_gateway_view.as_view(),name='go_to_gateway'),
     path('callback-gateway/',callback_gateway_view.as_view(),name='callback-gateway'),
 
-    # handler404 'core.views.notfound'
-
 
 
 
 ]
-handler404='core.views.notfound'
-
-# handler404= 'core.views.handler404'
-
+handler404= 'core.views.error_404_view'
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)

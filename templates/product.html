@@ -1,0 +1,124 @@
+{% extends "base.html" %} {% block content %}
+{% load comment_tags %} 
+{% load ratings %}
+
+
+<main class="mt-5 pt-4">
+  <div class="container dark-grey-text mt-5">
+    <!--Grid row-->
+    <div class="row wow fadeIn">
+      <!--Grid column-->
+      <div class="col-md-6 mb-4">
+        <img style="  border-radius: 8px;   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" src="{{ object.image.url }}" class="card-img-top" />
+        <br>
+
+        <br>
+        <img src="{{ object.imageslide.url }}" class="card-img-top" />
+
+      </div>
+      <!--Grid column-->
+
+      <!--Grid column-->
+      <div class="col-md-6 mb-4">
+        <!--Content-->
+        <div class="p-4">
+          <div class="mb-3">
+            <a href="">
+              <span class="badge purple mr-1"
+                >{{ object.get_category_display }}</span
+              >
+            </a>
+          </div>
+
+          <p class="lead">
+            {% if object.discount %}
+            <span class="mr-1">
+              <del>{{ object.price }}</del>
+            </span>
+            <span>{{ object.discount }} تومان</span>
+            {% else %}
+            <span>{{ object.price }} تومان</span>
+            {% endif %}
+          </p>
+            <br>
+            <p>
+              <strong> {% if object.status %}
+                      <span    class="badge badge-pill success-color"
+                          >موجود</span>
+                          {% else %}
+                          <span    class="badge badge-pill danger-color"
+                          >عدم موجودی</span>
+                      {% endif %}</strong>
+          {% ratings object %}
+       بازدیدها:   {{object.hits.count}}
+
+            </p>
+              <br><br>
+
+          <a
+            href="{{ object.get_add_to_cart_url }}"
+            class="btn btn-primary btn-md my-0 p"
+          >
+              افزودن به سبد خرید
+             <i class="fas fa-shopping-cart ml-1"></i>
+          </a>
+          <a
+            href="{{ object.get_remove_from_cart_url }}"
+            class="btn btn-danger btn-md my-0 p"
+          >
+            حدف از سبد خرید
+          </a>
+
+            <br>
+            <br>
+                        {% comment %} <span>{% for cate in object.category.title   %}
+                        {{cate}}{% endfor %}</span> {% endcomment %}
+
+
+            <span> تعداد صفحه : {{ object.pages }}</span>
+            <br>
+            <span>سال انتشار : {{ object.year }}</span>
+            <br>
+            <span>نویسنده : {{ object.author }}</span>
+            {% if object.translator == None %}
+            {% else %}
+            <br>
+
+            <span>مترجم : {{ object.translator }}</span>
+            {% endif %}
+            <br>
+            <span>ناشر :{{ object.publishers }}</span>
+            <br>
+                            دسته بندی ها :           {% for cat in object.category.active %}
+                <a>{{cat.title}} , </a>
+              {% endfor %}
+                        <br>
+
+          <p class="lead font-weight-bold">توضیحات</p>
+
+          <p>{{ object.description|safe }}</p>
+         
+        </div>
+    
+        <!--Content-->
+      </div>
+      <!--Grid column-->
+    </div>
+
+          {% render_comments object request %}
+          {% include_static_jquery %}
+          {% include_bootstrap %}
+
+
+    <!--Grid row-->
+
+    <hr />
+
+    
+      <!--Grid column-->
+    </div>
+    <!--Grid row-->
+  </div>
+</main>
+
+{% endblock content %}
