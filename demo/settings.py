@@ -1,16 +1,12 @@
 import os
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
+# DEBUG =False
 DEBUG =True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ALLOWED_HOSTS = ['papyrusbook-bookshoponline.fandogh.cloud']
 ALLOWED_HOSTS = []
 
-
-# STRIPE_PUBLIC_KEY = config('STRIPE_TEST_SECRET_KEY')
-# STRIPE_SECRET_KEY = config('STRIPE_LIVE_PUBLIC_KEY')
-# STRIPE_PUBLIC_KEY = config('STRRIPE_TEST_PUBLIC_KEY')
-# STRIPE_SECRET_KEY = config('STRIPE_LIVE_SECRET_KEY')
 LOGIN_REDIRECT_URL = "account:profile"
 LOGIN_URL = "account:login"
 # LOGIN_URL = '/auth/login/google-oauth2/'
@@ -161,9 +157,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AZ_IRANIAN_BANK_GATEWAYS = {
     'GATEWAYS': {
         'IDPAY': {
-            'MERCHANT_CODE': 'fba1d424-acfe-4499-a0e6-fa9ed24d353a ',
+            'MERCHANT_CODE': 'bbf0c575-ebab-4a92-88de-e0cd3a399025',
+            'X-API-KEY': 'bbf0c575-ebab-4a92-88de-e0cd3a399025',
             'METHOD': 'POST',
-            'X_SANDBOX':0,
+            'X_SANDBOX':1,
         },
 
 

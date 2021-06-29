@@ -9,8 +9,7 @@ from django_countries.widgets import CountrySelectWidget
 from .models import message
 
 PAYMENT_CHOICES = (
-    ('S', 'Stripe'),
-    ('P', 'PayPal')
+    ('S', 'ای دی پی'),
 )
 
 
@@ -51,7 +50,7 @@ class CheckoutForm(forms.Form):
 class CouponForm(forms.Form):
     code = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Promo code',
+        'placeholder': 'کد تخفیف',
         'aria-label': 'Recipient\'s username',
         'aria-describedby': 'basic-addon2'
     }))
