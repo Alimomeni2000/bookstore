@@ -1,0 +1,94 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <main>
+    <div class="container">
+
+    <div class="table-responsive text-nowrap">
+    <h2 style="margin-top: 40px">خلاصه سفارش</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">عنوان کتاب</th>
+            <th scope="col">قیمت</th>
+            <th scope="col">تعداد</th>
+            <th scope="col">قیمت کل</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order_book in object.books.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ order_book.book.title }}</td>
+            <td>{{ order_book.book.price }}</td>
+            <td>
+                <a href="{% url 'core:remove-single-book-from-cart' order_book.book.slug %}"><i class="fas fa-minus mr-2"></i></a>
+                {{ order_book.quantity }}
+                <a href="{% url 'core:add-to-cart' order_book.book.slug %}"><i class="fas fa-plus ml-2"></i></a>
+            </td>
+            <td>
+            {% if order_book.book.discount_price %}
+                 {{ order_book.get_total_discount_book_price }}  تومان
+                <span class="badge badge-primary">   سود شما {{ order_book.get_amount_saved }}   تومان</span>
+            {% else %}
+                 {{ order_book.get_total_book_price }} تومان
+            {% endif %}
+            <a style='color: red;' href="{% url 'core:remove-from-cart' order_book.book.slug %}">
+                <i class="fas fa-trash float-right"></i>
+            </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan='5'>سبد خرید شما خالی است </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+            <a class='btn btn-primary float-right' href='/'>ادامه فرآیند خرید</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% if object.coupon %}
+        <tr>
+            <td colspan="4"><b>کد تخفیف</b></td>
+            <td><b>-تومان {{ object.coupon.amount }}</b></td>
+        </tr>
+        {% endif %}
+        {% if object.get_total %}
+        <tr>
+            <td colspan="4"><b>کل سفارش</b></td>
+            <td><b>${{ object.get_total }}</b></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+            <a class='btn btn-primary float-right ml-2' href='/'> ادامه خرید</a>
+
+            <a class='btn btn-warning float-right ' href='/checkout/'>تسویه حساب</a>
+            </td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+ 
+    </div>
+       </div>
+<br>
+<br>
+<br>
+<br>
+<br><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+  </main>
+
+{% endblock content %}
+
+

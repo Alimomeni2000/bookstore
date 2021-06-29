@@ -1,0 +1,38 @@
+{% extends "core/base.html" %} 
+{% load static %}
+{% block content %}
+{% load ratings %}
+
+
+  <main >
+    <div class="container wow fadeIn">
+      <div class="row" style="margin-top: 27px !important;">
+        <div class="col-md-12 mb-8">
+          <div class="card" style="background-color:#e8e8e8;">
+          
+<h1 style=" text-align: center;margin-top: 20px !important;">صفحه‌ای که دنبال آن بودید پیدا نشد!</h1>
+         <a style="text-align: center !important;
+    height: 40px !important;
+    margin-top: 27px !important;
+    margin-right: auto  !important;
+    margin-left: auto  !important;
+
+    width:150px;
+    "  href="/" class="btn btn-primary  butt" >صفحه اصلی</a>
+<img style="margin-right:auto;margin-left:auto;margin-bottom:100px;"data-src="https://www.digikala.com/static/files/644d3f75.png" src="https://www.digikala.com/static/files/644d3f75.png" width="500" height="250" loading="lazy">
+         {% comment %} <a  href="{% url 'go_to_gateway' %}" class="btn btn-primary btn-lg btn-block a_link" target="_blank">پرداخت</a> {% endcomment %}
+
+          </div>
+
+        </div>
+
+
+      </div>
+<br>
+<br>
+<br>
+    </div>
+ 
+  </main>
+
+{% endblock content %}

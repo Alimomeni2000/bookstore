@@ -1,0 +1,22 @@
+{% extends "core/book_list.html" %} 
+      {% block navbar_container %}
+        نتایج جستجو برای  : {{search}}
+      {% endblock  %}
+
+    {% block empty_block %}
+      <nav
+      class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5" style="width: 71.5rem !important;background-color:#fff !important;border-radius:5px;"    >
+      <!-- Navbar brand -->
+        <span class="navbar-brand" style="color:#000 !important">
+    <h5> 
+        جستجو برای عبارت « {{search}}» با هیچ کتابی هم‌خوانی نداشت.
+   </h5>
+    <br>
+    <p style="margin-right:-150px !important;margin-top: -10px; font-size:15px;">- از عبارت‌های متداول‌تر استفاده کنید.</p>
+    <br>
+    <p style="margin-right:-150px !important;margin-top: -25px; font-size:15px;">- املای عبارت وارد شده را بررسی کنید.</p>
+  </span>
+
+    </nav>
+    {% endblock %}
+
