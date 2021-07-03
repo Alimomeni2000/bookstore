@@ -45,12 +45,16 @@
                 <strong>
                   <a href="{{ book.get_absolute_url }}" class="dark-grey-text"
                     >{{ book.title }}
-                    {% if book.special_offer %}
+                    {% if book.special_offer or book.value_discount  >= 0.0 %}
                     <span
                 
                       class="badge badge-pill danger-color"
                       >پیشنهاد ویژه</span
                     >
+                    {% else %}
+                    <br>
+                    <br>
+                    <br>
                       {% endif %}
                       
 
@@ -62,9 +66,16 @@
                      {% comment %} {% ratings book %} {% endcomment %}
                      
               <h4 class="font-weight-bold blue-text">
-                <strong>
-                  {% if book.discount_price %} {{ book.discount_price }}  تومان
-                     {% else %} {{ book.price }} تومان{% endif %}
+              <strong>
+{% if book.value_discount  >= 0.0 %}
+            <span class="mr-1">
+              <del>{{ book.price }}</del>
+            </span>
+            <br>
+            <span>{{ book.discount_price }} تومان</span>
+            {% else %}
+            <span>{{ book.price }} تومان</span>
+            {% endif %}
                 </strong>
                 <br>
                 <br>

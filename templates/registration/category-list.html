@@ -34,6 +34,12 @@
                    <td><i class="fa fa-check-circle" style="color:red"></i> </td>
                     {% endif %}
                     <td><img src="{{category.icon.url}}" style="border-radius:10px;" width="100"></td>
+
+                    {% if user.is_superuser %}
+                          <td> <a class="badge text-danger "  href="{% url 'account:category-delete' category.pk %}">حذف</a>
+</td>
+                    {% endif %}
+                    </td>
                 {% endfor %}
                   </tbody>
                 </table>
@@ -41,7 +47,7 @@
             <strong style="font-size:35px;">هیچ دسته بندی ای اضافه نشده است.</strong>
             <br>
             <strong style="font-size:25px;"> برای افزدون دسته بندی  
-           <a href="{% url 'account:coupon-create' %}"> کلیک</a> کنید.</strong>
+           <a href="{% url 'account:category-create' %}"> کلیک</a> کنید.</strong>
 
 {% endif %}
               </div>

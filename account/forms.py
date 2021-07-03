@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.db.models import fields
 from core.models import Order, UserProfile,Refund
 from django.contrib.auth.models import User
 
@@ -24,16 +25,6 @@ class UserProfileForm(forms.ModelForm):
         model= UserProfile
         fields = ['user','stripe_customer_id','one_click_purchasing',]
 
-class RefundForm(forms.ModelForm):
-    def __init__(self,*args, **kwargs):
-        super(RefundForm,self).__init__(*args,**kwargs)
-        self.fields['order'].disabled=True
-        self.fields['reason'].disabled=True
-        self.fields['email'].disabled=True
-
-    class Meta:
-        model= Refund
-        fields = ['order','reason','accepted','email']
 
 
 class OrderForm(forms.ModelForm):
@@ -43,6 +34,8 @@ class OrderForm(forms.ModelForm):
         
         self.fields['user'].disabled=True
         self.fields['ref_code'].disabled=True
+        self.fields['order_code'].disabled=True
+
         self.fields['books'].disabled=True
         self.fields['ordered_date'].disabled=True
         self.fields['shipping_address'].disabled=True
@@ -57,3 +50,19 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model= Order
         fields = "__all__"
+
+
+class RefundForm(forms.ModelForm):
+    order_code =forms.CharField()
+    
+
+    def __init__(self,*args, **kwargs):
+        super(RefundForm,self).__init__(*args,**kwargs)
+        self.fields['order'].disabled=True
+        self.fields['reason'].disabled=True
+        self.fields['email'].disabled=True
+
+    class Meta:
+        model= Refund
+        # fields='__all__'
+        fields = ['order_code','order','reason','accepted','email']

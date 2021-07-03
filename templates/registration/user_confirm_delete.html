@@ -1,17 +1,17 @@
 {% extends 'registration/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}{% block title-meta %}حذف کتاب{% endblock %} {% endblock %}
+{% block title %}{% block title-meta %}حذف کاربر{% endblock %} {% endblock %}
 {% block main %}
 <div class="card card-danger text-center mx-auto">
               <div class="card-header text-center">
-                <h3 class="card-title mb-0 float-right ">حذف کتاب</h3>
+                <h3 class="card-title mb-0 float-right ">حذف کاربر</h3>
               </div>
     <form method="post">
     {% csrf_token %}
     <br>
 
-    <p>آیا از حذف کتاب {{object.title}} مطمئن هستید؟</p>
+    <p>آیا از حذف کاربر {{object.title}} مطمئن هستید؟</p>
     <input type="submit" class="btn btn-danger" value="حذف">
     <br>
     <br>

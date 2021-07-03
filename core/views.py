@@ -25,7 +25,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView, View
-from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
+from .forms import CheckoutForm, CouponForm, PaymentForm
 
 from .models import Book, OrderBook, Order, SlidShow, Address, Payment, Coupon, Refund, UserProfile,Category
 from django.shortcuts import render, redirect
@@ -33,13 +33,15 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 from django.core.mail import send_mail
-
+def error_404_view(request,exception):
+    return render(request,'core/error.html')
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
+def create_order_code():
+    order_code=''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
+    order_code=order_code[:0]+'TC-'+order_code[0:]
+    return order_code
 
-
-def error_404_view(request, exception):
-    return render(request,'404.html')
 
 def contact(request):
     if request.method == "POST":
@@ -80,6 +82,7 @@ from django.contrib.auth.models import User
 
 
 class HomeView(ListView):
+    paginate_by = 8
 
     model = Book
     template_name = "home.html"
@@ -94,7 +97,7 @@ def slideShowView(request):
 
 
 class SearchList(ListView):
-    paginate_by = 10
+    paginate_by = 8
     template_name = 'search_list.html'
 
     def get_queryset(self):
@@ -106,7 +109,7 @@ class SearchList(ListView):
         return context
 
 class CategoryList(ListView):
-	paginate_by = 10
+	paginate_by = 8
 	template_name = "category.html"
 
 	def get_queryset(self):
@@ -118,22 +121,6 @@ class CategoryList(ListView):
 		context = super().get_context_data(**kwargs)
 		context['category'] = category
 		return context
-
-
-# class Login(LoginView):
-
-#     def form_valid(self, request, form):
-#         context = {}
-#         form = LoginForm(request.POST or None)
-#         context['form'] = form
-#         context['form'] = form
-#         if request.POST:
-#             if form.is_valid():
-#                 temp = form.cleaned_data.get("singup")
-#                 print(temp)
-
-#     def get_success_url(self):
-#         return redirect('home.html')
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
@@ -276,39 +263,6 @@ class AddCouponView(View):
                 return redirect("core:checkout")
 
 
-class RequestRefundView(View):
-    def get(self, *args, **kwargs):
-        form = RefundForm()
-        context = {
-            'form': form
-        }
-        return render(self.request, "request_refund.html", context)
-
-    def post(self, *args, **kwargs):
-        form = RefundForm(self.request.POST)
-        if form.is_valid():
-            ref_code = form.cleaned_data.get('ref_code')
-            message = form.cleaned_data.get('message')
-            email = form.cleaned_data.get('email')
-            # edit the order
-            try:
-                order = Order.objects.get(ref_code=ref_code)
-                order.refund_requested = True
-                order.save()
-
-                # store the refund
-                refund = Refund()
-                refund.order = order
-                refund.reason = message
-                refund.email = email
-                refund.save()
-
-                messages.info(self.request, "درخواست شما دریافت شد.")
-                return redirect("core:request-refund")
-
-            except ObjectDoesNotExist:
-                messages.info(self.request, "این کتاب وجود ندارد.")
-                return redirect("core:request-refund")
 
 
 class CheckoutView(View):
@@ -541,7 +495,10 @@ class callback_gateway_view(View):
   
             order.ordered = True
             order.payment = payment
+            order.order_code = create_order_code()
             order.ref_code = create_ref_code()
+            
+
             order.save()
 
             messages.warning(

@@ -12,22 +12,188 @@
 
               <br>
 {% if request.user.is_superuser %}
-        {{ form|crispy }}
-        <br>
-        <button class="btn btn-success">ذخیره</button>
+        {% comment %} {{ form|crispy }} {% endcomment %}
 
 
-        <br>
-        <br>
-        <br>
-{% else %}
 
-     <div class="form-row">
-      <div class="form-group col-md-6 mb-0"> تحویل گیرنده :
+
+             <div class="form-row">
+      <div class="form-group col-md-6 mb-0"> کد سفارش  :
+        {{object.order_code}}
+
+      </div>
+    </div>
+    <br>
+
+             <div class="form-row">
+      <div class="form-group col-md-6 mb-0"> تحویل گیرنده  :
         {{object.user.get_full_name}}
+        <hr>
+
+      </div>
+    </div>
+    <div class="form-row">
+    
+      <div class="form-group col-md-6 mb-0"> ارسال به : 
+      {% if object.shipping_addres.state == None %}
+         {{object.shipping_address.state }} ،{{object.shipping_address.city }} ،
+         {{object.shipping_address.street_address }} ،{{object.shipping_address.apartment_address }} ،
+         {{object.shipping_address.zip_code }}
+         {% else %}
+                  {{object.billing_address.state }} ،{{object.billing_address.city }} ،
+         {{object.billing_address.street_address }} ،{{object.billing_address.apartment_address }} ،
+         {{object.billing_address.zip_code }}
+{% endif %}
       </div>
     </div>
 
+    <br>
+
+     <div class="form-row">
+    
+      <div class="form-group col-md-6 mb-0"> جمع قیمت کالاهای مرسوله:
+      {{object.get_total }} تومان 
+         </div>
+    </div>
+        <br>
+    <hr>
+
+      <div class="form-row">
+            <div class="form-row">
+
+      {{form.being_delivered|as_crispy_field}}
+      
+         </div>
+            </div>
+    <br>
+
+   <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+      {% if object.coupon %}
+        کد تخفیف :
+      {{form.coupon}}
+      {% else %}
+        کد تخفیف :
+            {{form.coupon}}
+      {% endif %}
+      </div>
+
+    </div>   
+    <hr>
+
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+ وضعیت تحویل : 
+      {{form.received}}
+    
+      </div>
+
+    </div>
+{% if form.refund_requested %}
+
+          <div class="form-row">
+ 
+      <div class="form-group col-md-6 mb-0">
+      درخواست مرجوعی : 
+مشتری درخواست مرجوعی ثبت کرده است .
+      </div>
+    </div>          
+        <div class="form-row">
+
+      <div class="form-group col-md-6 mb-0">
+      اعصا مرجوعی :
+        {{ form.refund_granted }}
+
+      </div>
+    </div>
+{% endif %}
+      
+    <br>
+    <br>
+<h4> کتاب ها :</h4>
+ <section class="text-center mb-4" >
+      <div class="row wow fadeIn">
+        {% for book in object.books_to_list %}
+        <div class="col-lg-3 col-md-3 mb-10">
+          <div class="card">
+            <div class="view overlay"  >
+              <a href="{{ book.get_absolute_url }}" style="margin-top:100px; margin-bottom: 150px;">
+                <div class="mask rgba-white-slight"  >
+                </div>
+              <img src="{{ book.image.url }}" class="card-img-top" style="height: 120px !important;
+width: 90px !important;" />
+              </a>
+            </div>
+
+            <div class="card-body font-weight-bold blue-text" style="margin-top:60px !important">
+
+                 <br>
+                     <br>
+                      <br>
+              <h4>
+                <strong  >
+                 {% if book.discount %}
+            <span  class="mr-1">
+              <del>{{ book.price }} </del>
+            </span>
+            <span>{{ book.discount }} تومان</span>
+            {% else %}
+            <span>{{ book.price }} تومان</span>
+            {% endif %}
+                </strong>
+              
+                <br>
+                
+              </h4>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+                  </a>
+    </section>
+          <br>
+        <button class="btn btn-success" style="margin-left:30px ;margin-right:40px ; margin-bottom:40px;">ذخیره</button>
+       
+        {% if object.refund_requested == False %}
+         {% if request.resolver_match.kwargs.pk %}
+         <a href="{% url 'account:refund-create' %}" style="margin-top: -40px !important;" class="btn btn-danger">ثبت مرجوعی</a>
+         {% endif %}
+         {% endif %}
+    </div>
+     
+    <!--Section: Products v.3-->
+      {% comment %} {% endfor %} {% endcomment %}
+   {% comment %} {{ object.books_to_list}} {% endcomment %}
+
+        <br>
+       
+    </div>
+         </div>
+        </div>
+
+    </form>
+</div>
+{% else %}
+
+ 
+
+             <div class="form-row">
+      <div class="form-group col-md-6 mb-0"> کد سفارش  :
+        {{object.order_code}}
+
+      </div>
+    </div>
+    <br>
+
+             <div class="form-row">
+      <div class="form-group col-md-6 mb-0"> تحویل گیرنده  :
+        {{object.user.get_full_name}}
+        <hr>
+
+      </div>
+    </div>
     <div class="form-row">
     
       <div class="form-group col-md-6 mb-0"> ارسال به : 
@@ -73,6 +239,9 @@
       {% elif object.being_delivered == 'c' %}
     <strong>  تحویل به مشتری</strong>
     <hr>
+      {% elif object.being_delivered == 'R' %}
+    <strong>مرجوعی</strong>
+    <hr>
       {% endif %}
   
          </div>
@@ -82,7 +251,7 @@
  <section class="text-center mb-4" >
       <div class="row wow fadeIn">
         {% for book in object.books_to_list %}
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">z
           <div class="card">
             <div class="view overlay"  >
               <a href="{{ book.get_absolute_url }}" style="margin-top:100px; margin-bottom: 150px;">
@@ -127,10 +296,10 @@
    {% comment %} {{ object.books_to_list}} {% endcomment %}
 
     <br> 
-    {% if object.refund_requested == None %}
+    {% comment %} {% if object.refund_requested == False %} {% endcomment %}
          {% if request.resolver_match.kwargs.pk %}
-         <a href="{% url 'account:refund-create' %}" class="btn btn-danger">ثبت مرجوعی</a>
-         {% endif %}
+         <a href="{% url 'account:refund-create'  %}" class="btn btn-danger">ثبت مرجوعی</a>
+         {% comment %} {% endif %} {% endcomment %}
          {% endif %}
         {% endif %}
 

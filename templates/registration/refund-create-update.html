@@ -5,17 +5,18 @@
 {% block main %}
 <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title mb-0 float-right">ثبت مرجوعی</h3>
+                <h3 class="card-title mb-0 float-left">ثبت مرجوعی</h3>
               </div>
     <form method="POST" style="margin-left: 15px; margin-right: 15px;" enctype="multipart/form-data" action="{{ action_url }}">
         {% csrf_token %}
 
               <br>
-        {{ form.as_p }}
-
+              <p><label for="id_order_code">کد سفارش:</label> <input type="text" name="email" maxlength="254" required="" id="id_order_code"></p>
+        {{ form|crispy }}
+        
      <div class="form-row">
       <div class="form-group col-md-6 mb-0">
-        {% comment %} {{ form.code|as_crispy_field }}  {% endcomment %}
+      
       </div>
    
     </div>

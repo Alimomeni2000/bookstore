@@ -1,7 +1,7 @@
 {% extends 'registration/base.html' %}
 {% block title %}لیست کتاب ها{% endblock %} 
 {% block main %}
-{% comment %} {% if object_list != None %} {% endcomment %}
+{% if object_list %}
 <div class="row">
           <div class="col-12">
             <div class="card">
@@ -59,13 +59,13 @@
                   </tbody>
                 </table>
               <!-- /.card-body -->
-            {% comment %} {% else %} {% endcomment %}
+            {% else %}
             <strong style="font-size:35px;">هیچ کتابی اضافه نشده است</strong>
             <br>
             <strong style="font-size:25px;"> برای افزدون کتاب 
            <a href="{% url 'account:book-create' %}"> کلیک</a> کنید.</strong>
 
-{% comment %} {% endif %} {% endcomment %}
+{% endif %}
             </div>
 
             <!-- /.card -->

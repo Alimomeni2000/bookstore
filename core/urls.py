@@ -13,19 +13,20 @@ from .views import (
     about,
     # PaymentView,
     AddCouponView,
-    RequestRefundView,
     CategoryList,
     SearchList,
 
     # go_to_gateway_view
 )
-
+# from api.views import checkout
 app_name = 'core'
 
 urlpatterns = [
     # path('login/', Login.as_view(), name='login'),
     path('', HomeView.as_view(), name='home'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
+    # path('checkout/', checkout, name='checkout'),
+
     path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
 	path('category/<slug:slug>', CategoryList.as_view(), name="category"),
 	path('category/<slug:slug>/page/<int:page>', CategoryList.as_view(), name="category"),
@@ -41,8 +42,5 @@ urlpatterns = [
     path('remove-from-cart/<slug>/', remove_from_cart, name='remove-from-cart'),
     path('remove-book-from-cart/<slug>/', remove_single_book_from_cart,
          name='remove-single-book-from-cart'),
-    # path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
-    path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
-    # path('go_to_gateway/', go_to_gateway_view, name='go_to_gateway'),
 
 ]

@@ -10,6 +10,8 @@
                 <table class="table table-hover">
                   <thead>
                     <tr>
+                      <th>کد سفارش</th>
+
                       <th>کاربر</th>
                       <th>تاریخ ثبت</th>
                       <th>آدرس</th>
@@ -27,7 +29,8 @@
                     
                     <tr>
 
-                    <td><a href="{% url 'account:order-update' order.pk  %}">{{order.user}}</a></td>
+                    <td><a href="{% url 'account:order-update' order.pk  %}">{{order.order_code}}</a></td>
+                    <td>{{order.user.get_full_name}}</td>
                     
                     <td>{{order.jorderd_date}}</td>
 
@@ -46,21 +49,37 @@
                     {% else %}
                     <td>------</td>
                     {% endif %}
+ {% if order.being_delivered == 'S' %}
+    <td><strong>در صف بررسی </strong></td>
+      {% elif order.being_delivered == 'C' %}
+    <td><strong> تایید سفارش</strong></td>
+      {% elif order.being_delivered == 'P' %}
+    <td><strong>آماده سازی سفارش</strong></td>
 
-                    {% if order.being_delivered == True %}
-                    <td><i class="fa fa-check-circle" style="color:green"></i> </td>
-                    {% else %}
-                 <td> <i class="fa fa-minus-circle" style="color:red"></i> </td>
-                    {% endif %}
+      {% elif order.being_delivered == 'p' %}
+    <td><strong>بسته بندی</strong></td>
+
+      {% elif order.being_delivered == 'D' %}
+    <td><strong>تحویل به پست </strong></td>
+
+      {% elif order.being_delivered == 'c' %}
+   <td> <strong>  تحویل به مشتری</strong></td>
+      {% elif object.being_delivered == 'R' %}
+   <td> <strong>مرجوعی</strong></td>
+
+      {% endif %}
+                   
                     {% if order.received == True %}
                     <td><i class="fa fa-check-circle" style="color:green"></i> </td>
                     {% else %}
                   <td><i class="fa fa-minus-circle" style="color:red"></i> </td>
                     {% endif %}
-                    {% if order.refund_requested == True %}
+                    {% if order.refund_requested %}
                     <td><i class="fa fa-check-circle" style="color:green"></i> </td>
                     {% else %}
                   <td><i class="fa fa-minus-circle" style="color:red"></i> </td>
+
+                    
                     {% endif %}
                     {% if order.refund_granted == True %}
                     <td><i class="fa fa-check-circle" style="color:green"></i> </td>
@@ -84,7 +103,6 @@
            <a href="{% url 'core:home' %}"> کلیک</a> کنید.</strong>
 {% endif %}
 {% endif %}
-            </div>
 
             <!-- /.card -->
           </div>

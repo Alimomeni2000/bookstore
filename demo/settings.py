@@ -1,11 +1,11 @@
 import os
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-DEBUG =False
-# DEBUG =True
+# DEBUG =False
+DEBUG =True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ALLOWED_HOSTS = ['papyrusbook-bookshoponline.fandogh.cloud']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = "account:profile"
 LOGIN_URL = "account:login"

@@ -145,8 +145,10 @@ class RefundList(LoginRequiredMixin,ListView):
 
 class RefundCreate(LoginRequiredMixin,CreateView):
     model = Refund
-    fields = "__all__"
+    # form_class=CreateRefundForm
+    fields='__all__'
     template_name='registration/refund-create-update.html'
+
 
 class RefundUpdate(LoginRequiredMixin,UpdateView):
     model = Refund

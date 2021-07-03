@@ -7,7 +7,10 @@
     <a style="font-size:25px;" class="navbar-brand waves-effect" href="/">
       <strong class="blue-text"> فروشگاه &nbsp;&nbsp;</strong>
     </a>
+  {% if category %}
+
 <div class="dropdown show">
+
   <a class=" dropdown-toggle" style="color:#000 ;content: None; font-size:15px " role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
     
       <strong class="blue-text"><i class="fa fa-list"></i> دسته بندی ها &nbsp;&nbsp;</strong>
@@ -21,9 +24,9 @@
                 {% endif %} {% endcomment %}
                 {% comment %} {% endif %} {% endcomment %}
     {% endfor %}
-
   </div>
 </div>
+{% endif %}
         <a style="font-size:15px;" class="navbar-brand waves-effect" href="{% url 'core:contact' %}">
       <strong class="blue-text"> تماس با ما &nbsp;&nbsp;</strong>
     </a>

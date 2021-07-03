@@ -35,6 +35,7 @@ BEING_DELIVERED = (
     ('p', 'بسته بندی'),
     ('D', 'تحویل به پست'),
     ('c', 'تحویل مشتری'),
+    ('R', 'مرجوعی'),
 )
 
 class Category(models.Model):
@@ -77,8 +78,8 @@ class UserProfile(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=10, verbose_name="عنوان کتاب")
-    price = models.FloatField(verbose_name="درصد تخفیف")
+    title = models.CharField(max_length=100, verbose_name="عنوان کتاب")
+    price = models.FloatField(verbose_name="قیمت")
     discount_percent = models.FloatField(default=0,blank=True, null=True, verbose_name="درصد تخفیف")
     category = models.ManyToManyField(Category,related_name="books", verbose_name="دسته بندی")
     status = models.BooleanField(default=True, verbose_name="وضعیت")
@@ -131,7 +132,7 @@ class Book(models.Model):
         if self.value_discount == 0:
             return int(self.price)
         else:
-            return int(self.price-(self.price*self.discount_percent/100))
+            return int(self.price-((self.price*self.discount_percent)/100))
 class SlidShow(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE, verbose_name="نام کتاب")
     status = models.BooleanField(default=False, verbose_name="وضعیت")
@@ -230,7 +231,9 @@ class Coupon(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
+    order_code= models.CharField(max_length=20, blank=True, null=True, verbose_name="کد سفارش")
     ref_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="کد مرجوعی")
+
     books = models.ManyToManyField(OrderBook, verbose_name="کتاب ها")
     start_date = models.DateTimeField(auto_now_add=True, verbose_name="زمان شروع")
     ordered_date = models.DateTimeField(verbose_name="زمان ثبت سفارش")
@@ -295,10 +298,14 @@ class Refund(models.Model):
     class Meta:
         verbose_name = "مرجوعی"
         verbose_name_plural = "مرجوعی ها"
-
+    def order_code(self):
+        return self.order.order_code.all()
     def __str__(self):
         return f"{self.pk}"
 
+    # def code(self):
+    #     return "، ".join([self.order.order_cod for category in self.order.order_code])
+    # code.short_description = "دسته‌بندی"
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
     if created:
